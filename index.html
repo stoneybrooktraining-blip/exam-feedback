@@ -544,25 +544,24 @@ select option { background: var(--dark); color: var(--text); }
     <div class="divider"></div>
 
     <div class="field">
-      <label>Which subject? <span class="req">*</span></label>
-      <div class="pill-group" id="subject-group">
-        <input type="radio" name="subject" id="s-atk" value="Aircraft Technical Knowledge">
-        <label for="s-atk">Aircraft Technical Knowledge</label>
-        <input type="radio" name="subject" id="s-law" value="Air Law">
-        <label for="s-law">Air Law</label>
-        <input type="radio" name="subject" id="s-met" value="Meteorology">
-        <label for="s-met">Meteorology</label>
-        <input type="radio" name="subject" id="s-nav" value="Navigation">
-        <label for="s-nav">Navigation</label>
-        <input type="radio" name="subject" id="s-hf" value="Human Factors">
-        <label for="s-hf">Human Factors</label>
-        <input type="radio" name="subject" id="s-ops" value="Operations & Performance">
-        <label for="s-ops">Operations & Performance</label>
-        <input type="radio" name="subject" id="s-pof" value="Principles of Flight">
-        <label for="s-pof">Principles of Flight</label>
-        <input type="radio" name="subject" id="s-frto" value="Flight Radiotelephony">
-        <label for="s-frto">Flight Radiotelephony</label>
+      <label>Licence category <span class="req">*</span></label>
+      <div class="pill-group" id="category-group">
+        <input type="radio" name="category" id="cat-ppl" value="PPL" onchange="updateSubjects()">
+        <label for="cat-ppl">PPL</label>
+        <input type="radio" name="category" id="cat-cpl" value="CPL" onchange="updateSubjects()">
+        <label for="cat-cpl">CPL</label>
+        <input type="radio" name="category" id="cat-atpl" value="ATPL" onchange="updateSubjects()">
+        <label for="cat-atpl">ATPL</label>
+        <input type="radio" name="category" id="cat-ratings" value="Ratings" onchange="updateSubjects()">
+        <label for="cat-ratings">Ratings</label>
       </div>
+    </div>
+
+    <div class="field" id="subject-field" style="display:none;">
+      <label>Which subject? <span class="req">*</span></label>
+      <select id="subject-select">
+        <option value="">— Select subject —</option>
+      </select>
     </div>
 
     <div class="divider"></div>
@@ -693,6 +692,63 @@ const TOTAL_STEPS = 3;
 
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwt2KP2Yn_jcDSfAdhBInTU3fxcUZQ8rLlcqn8umLbRnfbcirlnxMmwGNtMxZHOj8md/exec';
 
+const SUBJECT_MAP = {
+  PPL: [
+    'PPL Air Law',
+    'PPL Meteorology',
+    'PPL Navigation',
+    'PPL Human Factors',
+    'PPL Aircraft Technical Knowledge (Aeroplane)',
+    'PPL Aircraft Technical Knowledge (Helicopter)',
+    'PPL Flight Radiotelephony'
+  ],
+  CPL: [
+    'CPL Air Law (Aeroplane)',
+    'CPL Air Law (Helicopter)',
+    'CPL Meteorology',
+    'CPL Navigation',
+    'CPL Human Factors',
+    'CPL Principles of Flight (Aeroplane)',
+    'CPL Principles of Flight & Aircraft Performance (Helicopter)',
+    'CPL Aircraft Technical Knowledge (Aeroplane)',
+    'CPL General Aircraft Technical Knowledge (Helicopter)'
+  ],
+  ATPL: [
+    'ATPL Air Law',
+    'ATPL Meteorology',
+    'ATPL Human Factors',
+    'ATPL Advanced Aerodynamics, Performance & Systems Knowledge',
+    'ATPL Instruments & Navigation Aids',
+    'ATPL Flight Navigation',
+    'ATPL Flight Planning'
+  ],
+  Ratings: [
+    'IFR Air Law',
+    'IFR Flight Navigation',
+    'IFR Instruments & Navigation Aids',
+    'IR Operational Knowledge (PPL holders)',
+    'Basic Turbine Knowledge (Aeroplane)',
+    'Basic Turbine Knowledge (Helicopter)',
+    'Performance Based Navigation (PBN)',
+    'NDB/ADF Knowledge'
+  ]
+};
+
+function updateSubjects() {
+  const cat = document.querySelector('input[name="category"]:checked')?.value;
+  const field = document.getElementById('subject-field');
+  const sel = document.getElementById('subject-select');
+  if (!cat) { field.style.display = 'none'; return; }
+  field.style.display = 'block';
+  sel.innerHTML = '<option value="">— Select subject —</option>';
+  SUBJECT_MAP[cat].forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = s;
+    sel.appendChild(opt);
+  });
+}
+
 window.onload = () => addQuestion();
 
 function goTo(step) {
@@ -717,7 +773,11 @@ function validateStep(step) {
       alert('Please enter the approximate exam date.');
       return false;
     }
-    if (!document.querySelector('input[name="subject"]:checked')) {
+    if (!document.querySelector('input[name="category"]:checked')) {
+      alert('Please select a licence category.');
+      return false;
+    }
+    if (!document.getElementById('subject-select').value) {
       alert('Please select the exam subject.');
       return false;
     }
@@ -802,7 +862,7 @@ function collectData() {
       examDate: document.getElementById('exam-date').value,
     },
     exam: {
-      subject: document.querySelector('input[name="subject"]:checked')?.value || '',
+      subject: document.getElementById('subject-select').value || '',
       difficulty: document.querySelector('input[name="difficulty"]:checked')?.value || '',
       languageMatch: document.querySelector('input[name="language-match"]:checked')?.value || '',
     },
