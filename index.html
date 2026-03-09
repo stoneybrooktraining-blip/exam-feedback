@@ -1,939 +1,908 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Exam Feedback — Stoneybrook Training</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --dark: #1a1a2e;
-  --darker: #141424;
-  --teal: #2ab5b2;
-  --teal-dark: #1e8c8a;
-  --gold: #b5a642;
-  --gold-light: #d4c85a;
-  --text: #f0f0f0;
-  --muted: #8a8aad;
-  --card: rgba(255,255,255,0.035);
-  --border: rgba(42,181,178,0.2);
-  --success: #22c55e;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exam Feedback — Stoneybrook Training</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --bg-card: #ffffff;
+      --teal: #1a9e9b;
+      --teal-dark: #16817f;
+      --teal-light: rgba(26,158,155,0.08);
+      --gold: #9a8c2e;
+      --gold-light: #b5a642;
+      --text: #1e293b;
+      --text-secondary: #475569;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --border-focus: rgba(26,158,155,0.4);
+      --input-bg: #f8fafc;
+      --success: #22c55e;
+      --header-bg: #1a2332;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    /* Dark header banner */
+    .header-banner {
+      background: var(--header-bg);
+      padding: 48px 24px 56px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .header-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(26,158,155,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(181,166,66,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .header-banner > * { position: relative; z-index: 1; }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .form-body {
+      margin-top: -32px;
+      position: relative;
+      z-index: 2;
+    }
 
-body {
-  background: var(--darker);
-  color: var(--text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+    /* Header */
+    .logo-wordmark {
+      margin-bottom: 28px;
+      font-size: clamp(28px, 6vw, 42px);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+    .logo-wordmark .stoney { color: #ffffff; }
+    .logo-wordmark .brook { color: var(--gold-light); }
+    .logo-sub {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #2ab5b2;
+      margin-top: 6px;
+    }
+    h1 {
+      font-size: clamp(22px, 4.5vw, 32px);
+      font-weight: 700;
+      line-height: 1.2;
+      color: #ffffff;
+      margin-bottom: 14px;
+      margin-top: 24px;
+    }
+    h1 span { color: #2ab5b2; }
+    .subtitle {
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.7;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .anon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(42,181,178,0.12);
+      border: 1px solid rgba(42,181,178,0.25);
+      font-size: 12px;
+      color: #2ab5b2;
+      font-weight: 500;
+    }
 
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(42,181,178,0.1) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(181,166,66,0.06) 0%, transparent 60%),
-    linear-gradient(160deg, #141424 0%, #1a1a2e 50%, #141424 100%);
-  z-index: 0;
-  pointer-events: none;
-}
+    /* Progress bar */
+    .progress-wrap {
+      margin-bottom: 28px;
+      padding-top: 24px;
+    }
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .progress-bar {
+      height: 3px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal-dark), var(--teal));
+      border-radius: 4px;
+      transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
 
-.container {
-  position: relative;
-  z-index: 1;
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 48px 24px 80px;
-}
+    /* Steps */
+    .step { display: none; animation: fadeUp 0.35s ease both; }
+    .step.active { display: block; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-/* Header */
-.header { text-align: center; margin-bottom: 48px; }
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .step-label {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .step-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .step-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
 
-.logo-wordmark {
-  margin-bottom: 32px;
-  font-size: clamp(28px, 6vw, 42px);
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  line-height: 1;
-}
+    /* Form fields */
+    .field { margin-bottom: 20px; }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 7px;
+      letter-spacing: 0.02em;
+    }
+    label .req { color: var(--teal); margin-left: 2px; }
+    label .opt { color: var(--muted); font-weight: 400; font-size: 11px; margin-left: 4px; }
 
-.logo-wordmark .stoney { color: #ffffff; }
-.logo-wordmark .brook { color: var(--gold); }
+    input[type="text"], input[type="email"], select, textarea {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+    }
+    input[type="text"]:focus, input[type="email"]:focus, select:focus, textarea:focus {
+      border-color: var(--teal);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(26,158,155,0.1);
+    }
+    input[type="text"]::placeholder, textarea::placeholder {
+      color: #94a3b8;
+    }
+    textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
+    select option { background: #fff; color: var(--text); }
 
-.logo-sub {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--teal);
-  margin-top: 6px;
-}
+    /* Radio / Checkbox pills */
+    .pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill-group input { display: none; }
+    .pill-group label {
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--muted);
+      transition: all 0.18s;
+      margin-bottom: 0;
+      letter-spacing: 0;
+    }
+    .pill-group input:checked + label {
+      background: var(--teal-light);
+      border-color: var(--teal);
+      color: var(--teal);
+      font-weight: 500;
+    }
+    .pill-group label:hover {
+      border-color: rgba(26,158,155,0.5);
+      color: var(--text);
+    }
 
-h1 {
-  font-size: clamp(22px, 4.5vw, 32px);
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--text);
-  margin-bottom: 14px;
-  margin-top: 28px;
-}
+    /* Option rows */
+    .option-row {
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .option-letter {
+      background: var(--teal-light);
+      border: 1px solid rgba(26,158,155,0.15);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      color: var(--teal);
+      font-weight: 500;
+    }
 
-h1 span { color: var(--teal); }
+    /* Rating scale */
+    .rating-wrap { display: flex; gap: 8px; }
+    .rating-wrap input { display: none; }
+    .rating-wrap label {
+      flex: 1;
+      text-align: center;
+      padding: 10px 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all 0.18s;
+      margin-bottom: 0;
+      letter-spacing: 0;
+    }
+    .rating-wrap input:checked + label {
+      background: var(--teal-light);
+      border-color: var(--teal);
+      color: var(--teal-dark);
+    }
+    .rating-ends {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+      font-family: 'DM Mono', monospace;
+    }
 
-.subtitle {
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.7;
-  max-width: 520px;
-  margin: 0 auto;
-}
+    /* Add button */
+    .add-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--teal-light);
+      border: 1px dashed rgba(26,158,155,0.3);
+      border-radius: 10px;
+      color: var(--teal);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+    .add-btn:hover {
+      background: rgba(26,158,155,0.12);
+      border-color: var(--teal);
+    }
 
-.anon-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  background: rgba(42,181,178,0.08);
-  border: 1px solid rgba(42,181,178,0.2);
-  font-size: 12px;
-  color: var(--teal);
-  font-weight: 500;
-}
+    /* Nav buttons */
+    .nav { display: flex; gap: 12px; margin-top: 24px; }
+    .btn-back {
+      padding: 13px 24px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-back:hover {
+      border-color: #cbd5e1;
+      color: var(--text);
+      background: #f8fafc;
+    }
+    .btn-next {
+      flex: 1;
+      padding: 13px 24px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .btn-next:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(26,158,155,0.2);
+    }
+    .btn-next:active { transform: translateY(0); }
+    .btn-submit {
+      flex: 1;
+      padding: 13px 24px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .btn-submit:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(26,158,155,0.2);
+    }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
-/* Progress bar */
-.progress-wrap { margin-bottom: 36px; }
+    /* Question block */
+    .question-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      position: relative;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .q-number {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+    }
+    .remove-q {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      color: var(--muted);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      line-height: 1;
+    }
+    .remove-q:hover {
+      background: rgba(220,38,38,0.08);
+      border-color: rgba(220,38,38,0.25);
+      color: #dc2626;
+    }
 
-.progress-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  font-family: 'DM Mono', monospace;
-  color: var(--muted);
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
+    /* Success screen */
+    .success-screen { text-align: center; padding: 48px 24px; }
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--teal-light);
+      border: 2px solid rgba(26,158,155,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 24px;
+      color: var(--teal);
+    }
+    .success-screen h2 { font-size: 26px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+    .success-screen p { font-size: 14px; color: var(--muted); line-height: 1.7; max-width: 420px; margin: 0 auto 28px; }
+    .new-btn {
+      padding: 11px 24px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
 
-.progress-bar {
-  height: 3px;
-  background: rgba(255,255,255,0.06);
-  border-radius: 4px;
-  overflow: hidden;
-}
+    /* Info box */
+    .info-box {
+      background: rgba(181,166,66,0.06);
+      border: 1px solid rgba(181,166,66,0.18);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--gold);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .info-box .icon { flex-shrink: 0; font-size: 15px; margin-top: 1px; }
+    .info-box.teal {
+      background: var(--teal-light);
+      border-color: rgba(26,158,155,0.18);
+      color: var(--teal-dark);
+    }
 
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--teal-dark), var(--teal));
-  border-radius: 4px;
-  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
-}
+    /* Divider */
+    .divider { height: 1px; background: var(--border); margin: 24px 0; }
 
-/* Steps */
-.step { display: none; animation: fadeUp 0.35s ease both; }
-.step.active { display: block; }
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: #94a3b8;
+      letter-spacing: 0.05em;
+    }
+    .footer a { color: var(--teal); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Cards */
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 28px;
-  margin-bottom: 16px;
-}
-
-.step-label {
-  font-size: 11px;
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 6px;
-}
-
-.step-title { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
-
-.step-desc {
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.6;
-  margin-bottom: 24px;
-}
-
-/* Form fields */
-.field { margin-bottom: 20px; }
-
-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
-  margin-bottom: 7px;
-  letter-spacing: 0.02em;
-}
-
-label .req { color: var(--teal); margin-left: 2px; }
-label .opt { color: var(--muted); font-weight: 400; font-size: 11px; margin-left: 4px; }
-
-input[type="text"], input[type="email"], select, textarea {
-  width: 100%;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(42,181,178,0.2);
-  border-radius: 10px;
-  padding: 12px 16px;
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-  -webkit-appearance: none;
-}
-
-input[type="text"]:focus, input[type="email"]:focus, select:focus, textarea:focus {
-  border-color: var(--teal);
-  background: rgba(42,181,178,0.05);
-  box-shadow: 0 0 0 3px rgba(42,181,178,0.1);
-}
-
-textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
-select option { background: var(--dark); color: var(--text); }
-
-/* Radio / Checkbox pills */
-.pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
-.pill-group input { display: none; }
-
-.pill-group label {
-  cursor: pointer;
-  padding: 8px 16px;
-  border-radius: 30px;
-  border: 1px solid rgba(42,181,178,0.25);
-  background: rgba(255,255,255,0.025);
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--muted);
-  transition: all 0.18s;
-  margin-bottom: 0;
-  letter-spacing: 0;
-}
-
-.pill-group input:checked + label {
-  background: rgba(42,181,178,0.15);
-  border-color: var(--teal);
-  color: var(--teal);
-  font-weight: 500;
-}
-
-.pill-group label:hover { border-color: rgba(42,181,178,0.5); color: var(--text); }
-
-/* Option rows */
-.option-row {
-  display: grid;
-  grid-template-columns: 60px 1fr;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.option-letter {
-  background: rgba(42,181,178,0.08);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px;
-  text-align: center;
-  font-family: 'DM Mono', monospace;
-  font-size: 14px;
-  color: var(--teal);
-  font-weight: 500;
-}
-
-/* Rating scale */
-.rating-wrap { display: flex; gap: 8px; }
-.rating-wrap input { display: none; }
-
-.rating-wrap label {
-  flex: 1;
-  text-align: center;
-  padding: 10px 4px;
-  border-radius: 10px;
-  border: 1px solid rgba(42,181,178,0.2);
-  background: rgba(255,255,255,0.025);
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--muted);
-  transition: all 0.18s;
-  margin-bottom: 0;
-  letter-spacing: 0;
-}
-
-.rating-wrap input:checked + label {
-  background: rgba(42,181,178,0.18);
-  border-color: var(--teal);
-  color: var(--text);
-}
-
-.rating-ends {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 6px;
-  font-family: 'DM Mono', monospace;
-}
-
-/* Add button */
-.add-btn {
-  width: 100%;
-  padding: 12px;
-  background: rgba(42,181,178,0.06);
-  border: 1px dashed rgba(42,181,178,0.3);
-  border-radius: 10px;
-  color: var(--teal);
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 8px;
-}
-
-.add-btn:hover { background: rgba(42,181,178,0.12); border-color: var(--teal); }
-
-/* Nav buttons */
-.nav { display: flex; gap: 12px; margin-top: 24px; }
-
-.btn-back {
-  padding: 13px 24px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: transparent;
-  color: var(--muted);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-back:hover { border-color: rgba(255,255,255,0.25); color: var(--text); }
-
-.btn-next {
-  flex: 1;
-  padding: 13px 24px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(135deg, var(--teal-dark), var(--teal));
-  color: #fff;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 0.02em;
-}
-
-.btn-next:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(42,181,178,0.25);
-}
-.btn-next:active { transform: translateY(0); }
-
-.btn-submit {
-  flex: 1;
-  padding: 13px 24px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(135deg, var(--teal-dark), var(--teal));
-  color: #fff;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 0.02em;
-}
-
-.btn-submit:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(42,181,178,0.25); }
-.btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-
-/* Question block */
-.question-block {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 16px;
-  position: relative;
-}
-
-.q-number {
-  font-size: 11px;
-  font-family: 'DM Mono', monospace;
-  color: var(--gold);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 14px;
-}
-
-.remove-q {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 6px;
-  width: 28px;
-  height: 28px;
-  color: var(--muted);
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s;
-  line-height: 1;
-}
-
-.remove-q:hover {
-  background: rgba(220,38,38,0.15);
-  border-color: rgba(220,38,38,0.3);
-  color: #f87171;
-}
-
-/* Success screen */
-.success-screen { text-align: center; padding: 48px 24px; }
-
-.success-icon {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: rgba(42,181,178,0.12);
-  border: 2px solid rgba(42,181,178,0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  margin: 0 auto 24px;
-  color: var(--teal);
-}
-
-.success-screen h2 { font-size: 26px; font-weight: 700; margin-bottom: 12px; }
-.success-screen p {
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.7;
-  max-width: 420px;
-  margin: 0 auto 28px;
-}
-
-.new-btn {
-  padding: 11px 24px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(135deg, var(--teal-dark), var(--teal));
-  color: #fff;
-  font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-/* Info box */
-.info-box {
-  background: rgba(181,166,66,0.06);
-  border: 1px solid rgba(181,166,66,0.2);
-  border-radius: 10px;
-  padding: 14px 16px;
-  font-size: 13px;
-  color: var(--gold-light);
-  line-height: 1.6;
-  margin-bottom: 20px;
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-.info-box .icon { flex-shrink: 0; font-size: 15px; margin-top: 1px; }
-
-/* Divider */
-.divider { height: 1px; background: var(--border); margin: 24px 0; }
-
-/* Footer */
-.footer {
-  text-align: center;
-  margin-top: 48px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(255,255,255,0.05);
-  font-size: 11px;
-  color: rgba(255,255,255,0.2);
-  letter-spacing: 0.05em;
-}
-
-.footer a { color: var(--teal); text-decoration: none; }
-.footer a:hover { text-decoration: underline; }
-
-/* Responsive */
-@media (max-width: 480px) {
-  .container { padding: 32px 16px 60px; }
-  .option-row { grid-template-columns: 48px 1fr; }
-  .rating-wrap label { font-size: 13px; }
-  .logo-wordmark { font-size: 28px; }
-}
-</style>
-
+    /* Responsive */
+    @media (max-width: 480px) {
+      .header-banner { padding: 32px 16px 48px; }
+      .container { padding: 0 16px 60px; }
+      .option-row { grid-template-columns: 48px 1fr; }
+      .rating-wrap label { font-size: 13px; }
+      .logo-wordmark { font-size: 28px; }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
 
-<!-- Header -->
-
-<div class="header">
-  <div class="logo-wordmark">
-    <span class="stoney">STONEY</span><span class="brook">BROOK</span>
-    <div class="logo-sub">Online Theory Courses</div>
-  </div>
-  <h1>Pilot Exam<br><span>Question Feedback</span></h1>
-  <p class="subtitle">Help us improve your training by sharing questions from your recent exam. Your feedback helps us align course language with the exam style.</p>
-  <div class="anon-badge">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    Anonymous — your identity is not recorded
-  </div>
-</div>
-
-<!-- Progress -->
-
-<div class="progress-wrap">
-  <div class="progress-labels">
-    <span id="progress-label">Step 1 of 3</span>
-    <span id="progress-pct">33%</span>
-  </div>
-  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:33%"></div></div>
-</div>
-
-<!-- STEP 1: The Exam -->
-
-<div class="step active" id="step-1">
-  <div class="card">
-    <div class="step-label">Step 1 — The Exam</div>
-    <div class="step-title">Exam Details</div>
-    <p class="step-desc">Tell us which exam you sat and how it went overall.</p>
-
-    <div class="field">
-      <label>Flying School / Organisation <span class="opt">(optional)</span></label>
-      <input type="text" id="student-school" placeholder="e.g. Auckland Aero Club">
+  <!-- Dark header banner -->
+  <div class="header-banner">
+    <div class="logo-wordmark">
+      <span class="stoney">STONEY</span><span class="brook">BROOK</span>
+      <div class="logo-sub">Online Theory Courses</div>
     </div>
-
-    <div class="field">
-      <label>Exam Date (approximate) <span class="req">*</span></label>
-      <input type="text" id="exam-date" placeholder="e.g. March 2026">
+    <h1>Pilot Exam<br><span>Question Feedback</span></h1>
+    <p class="subtitle">Help us improve your training by sharing questions from your recent exam. Your feedback helps us align course language with the exam style.</p>
+    <div class="anon-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Anonymous — your identity is not recorded
     </div>
+  </div>
 
-    <div class="divider"></div>
+  <div class="container">
+    <div class="form-body">
 
-    <div class="field">
-      <label>Licence category <span class="req">*</span></label>
-      <div class="pill-group" id="category-group">
-        <input type="radio" name="category" id="cat-ppl" value="PPL" onchange="updateSubjects()">
-        <label for="cat-ppl">PPL</label>
-        <input type="radio" name="category" id="cat-cpl" value="CPL" onchange="updateSubjects()">
-        <label for="cat-cpl">CPL</label>
-        <input type="radio" name="category" id="cat-atpl" value="ATPL" onchange="updateSubjects()">
-        <label for="cat-atpl">ATPL</label>
-        <input type="radio" name="category" id="cat-ratings" value="Ratings" onchange="updateSubjects()">
-        <label for="cat-ratings">Ratings</label>
+      <!-- Progress -->
+      <div class="progress-wrap">
+        <div class="progress-labels">
+          <span id="progress-label">Step 1 of 3</span>
+          <span id="progress-pct">33%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:33%"></div></div>
       </div>
-    </div>
 
-    <div class="field" id="subject-field" style="display:none;">
-      <label>Which subject? <span class="req">*</span></label>
-      <select id="subject-select">
-        <option value="">— Select subject —</option>
-      </select>
-    </div>
+      <!-- STEP 1: The Exam -->
+      <div class="step active" id="step-1">
+        <div class="card">
+          <div class="step-label">Step 1 — The Exam</div>
+          <div class="step-title">Exam Details</div>
+          <p class="step-desc">Tell us which exam you sat and how it went overall.</p>
 
-    <div class="divider"></div>
+          <div class="field">
+            <label>Flying School / Organisation <span class="opt">(optional)</span></label>
+            <input type="text" id="student-school" placeholder="e.g. Auckland Aero Club">
+          </div>
+          <div class="field">
+            <label>Exam Date (approximate) <span class="req">*</span></label>
+            <input type="text" id="exam-date" placeholder="e.g. March 2026">
+          </div>
 
-    <div class="field">
-      <label>Overall exam difficulty <span class="req">*</span></label>
-      <div class="rating-wrap">
-        <input type="radio" name="difficulty" id="d1" value="1"><label for="d1">1</label>
-        <input type="radio" name="difficulty" id="d2" value="2"><label for="d2">2</label>
-        <input type="radio" name="difficulty" id="d3" value="3"><label for="d3">3</label>
-        <input type="radio" name="difficulty" id="d4" value="4"><label for="d4">4</label>
-        <input type="radio" name="difficulty" id="d5" value="5"><label for="d5">5</label>
+          <div class="divider"></div>
+
+          <div class="field">
+            <label>Licence category <span class="req">*</span></label>
+            <div class="pill-group" id="category-group">
+              <input type="radio" name="category" id="cat-ppl" value="PPL" onchange="updateSubjects()">
+              <label for="cat-ppl">PPL</label>
+              <input type="radio" name="category" id="cat-cpl" value="CPL" onchange="updateSubjects()">
+              <label for="cat-cpl">CPL</label>
+              <input type="radio" name="category" id="cat-atpl" value="ATPL" onchange="updateSubjects()">
+              <label for="cat-atpl">ATPL</label>
+              <input type="radio" name="category" id="cat-ratings" value="Ratings" onchange="updateSubjects()">
+              <label for="cat-ratings">Ratings</label>
+            </div>
+          </div>
+
+          <div class="field" id="subject-field" style="display:none;">
+            <label>Which subject? <span class="req">*</span></label>
+            <select id="subject-select">
+              <option value="">— Select subject —</option>
+            </select>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="field">
+            <label>Overall exam difficulty <span class="req">*</span></label>
+            <div class="rating-wrap">
+              <input type="radio" name="difficulty" id="d1" value="1"><label for="d1">1</label>
+              <input type="radio" name="difficulty" id="d2" value="2"><label for="d2">2</label>
+              <input type="radio" name="difficulty" id="d3" value="3"><label for="d3">3</label>
+              <input type="radio" name="difficulty" id="d4" value="4"><label for="d4">4</label>
+              <input type="radio" name="difficulty" id="d5" value="5"><label for="d5">5</label>
+            </div>
+            <div class="rating-ends"><span>Very Easy</span><span>Very Hard</span></div>
+          </div>
+
+          <div class="field">
+            <label>How well did course language match exam language?</label>
+            <div class="rating-wrap">
+              <input type="radio" name="language-match" id="l1" value="1"><label for="l1">1</label>
+              <input type="radio" name="language-match" id="l2" value="2"><label for="l2">2</label>
+              <input type="radio" name="language-match" id="l3" value="3"><label for="l3">3</label>
+              <input type="radio" name="language-match" id="l4" value="4"><label for="l4">4</label>
+              <input type="radio" name="language-match" id="l5" value="5"><label for="l5">5</label>
+            </div>
+            <div class="rating-ends"><span>Very Different</span><span>Very Similar</span></div>
+          </div>
+        </div>
+        <div class="nav">
+          <button class="btn-next" onclick="goTo(2)">Continue →</button>
+        </div>
       </div>
-      <div class="rating-ends"><span>Very Easy</span><span>Very Hard</span></div>
-    </div>
 
-    <div class="field">
-      <label>How well did course language match exam language?</label>
-      <div class="rating-wrap">
-        <input type="radio" name="language-match" id="l1" value="1"><label for="l1">1</label>
-        <input type="radio" name="language-match" id="l2" value="2"><label for="l2">2</label>
-        <input type="radio" name="language-match" id="l3" value="3"><label for="l3">3</label>
-        <input type="radio" name="language-match" id="l4" value="4"><label for="l4">4</label>
-        <input type="radio" name="language-match" id="l5" value="5"><label for="l5">5</label>
+      <!-- STEP 2: Question Reports -->
+      <div class="step" id="step-2">
+        <div class="card">
+          <div class="step-label">Step 2 — Specific Questions</div>
+          <div class="step-title">Report Confusing Questions</div>
+          <p class="step-desc">Add as many questions as you can recall. Focus on the ones that confused you or used unfamiliar phrasing.</p>
+          <div class="info-box">
+            <span class="icon">💡</span>
+            <span>You don't need to remember the question word-for-word. A rough version of the topic and wording is very helpful. Focus on what threw you off.</span>
+          </div>
+          <div class="info-box teal">
+            <span class="icon">🎙️</span>
+            <span>Tip: You can tap the microphone icon on your keyboard to dictate instead of typing — it's much faster for recalling exam questions.</span>
+          </div>
+        </div>
+
+        <div id="questions-container">
+          <!-- Questions added dynamically -->
+        </div>
+
+        <button class="add-btn" onclick="addQuestion()">+ Add Another Question</button>
+
+        <div class="nav" style="margin-top:20px">
+          <button class="btn-back" onclick="goTo(1)">← Back</button>
+          <button class="btn-next" onclick="goTo(3)">Continue →</button>
+        </div>
       </div>
-      <div class="rating-ends"><span>Very Different</span><span>Very Similar</span></div>
-    </div>
 
-  </div>
-  <div class="nav">
-    <button class="btn-next" onclick="goTo(2)">Continue →</button>
-  </div>
-</div>
+      <!-- STEP 3: Final Thoughts -->
+      <div class="step" id="step-3">
+        <div class="card">
+          <div class="step-label">Step 3 — Final Thoughts</div>
+          <div class="step-title">Anything Else?</div>
+          <p class="step-desc">Any general patterns you noticed — unusual phrasing, topics that surprised you, or areas where the exam felt out of scope.</p>
 
-<!-- STEP 2: Question Reports -->
+          <div class="field">
+            <label>General comments about the exam language or style</label>
+            <textarea id="general-comments" placeholder="e.g. Several questions used double negatives which made them hard to parse. The meteorology section used terms I hadn't seen before..."></textarea>
+          </div>
 
-<div class="step" id="step-2">
-  <div class="card">
-    <div class="step-label">Step 2 — Specific Questions</div>
-    <div class="step-title">Report Confusing Questions</div>
-    <p class="step-desc">Add as many questions as you can recall. Focus on the ones that confused you or used unfamiliar phrasing.</p>
+          <div class="field">
+            <label>Topics NOT covered in your Stoneybrook course but appeared in the exam</label>
+            <textarea id="missing-topics" placeholder="e.g. There were questions about SIGMET decoding that weren't in the course..." style="min-height:80px"></textarea>
+          </div>
 
-    <div class="info-box">
-      <span class="icon">💡</span>
-      <span>You don't need to remember the question word-for-word. A rough version of the topic and wording is very helpful. Focus on what threw you off.</span>
-    </div>
+          <div class="field">
+            <label>How confident did you feel going into the exam?</label>
+            <div class="rating-wrap">
+              <input type="radio" name="confidence" id="c1" value="1"><label for="c1">1</label>
+              <input type="radio" name="confidence" id="c2" value="2"><label for="c2">2</label>
+              <input type="radio" name="confidence" id="c3" value="3"><label for="c3">3</label>
+              <input type="radio" name="confidence" id="c4" value="4"><label for="c4">4</label>
+              <input type="radio" name="confidence" id="c5" value="5"><label for="c5">5</label>
+            </div>
+            <div class="rating-ends"><span>Not at all</span><span>Very Confident</span></div>
+          </div>
 
-    <div class="info-box" style="background: rgba(42,181,178,0.06); border-color: rgba(42,181,178,0.2); color: var(--teal);">
-      <span class="icon">🎙️</span>
-      <span>Tip: You can tap the microphone icon on your keyboard to dictate instead of typing — it's much faster for recalling exam questions.</span>
-    </div>
-  </div>
-
-  <div id="questions-container">
-    <!-- Questions added dynamically -->
-  </div>
-
-  <button class="add-btn" onclick="addQuestion()">+ Add Another Question</button>
-
-  <div class="nav" style="margin-top:20px">
-    <button class="btn-back" onclick="goTo(1)">← Back</button>
-    <button class="btn-next" onclick="goTo(3)">Continue →</button>
-  </div>
-</div>
-
-<!-- STEP 3: Final Thoughts -->
-
-<div class="step" id="step-3">
-  <div class="card">
-    <div class="step-label">Step 3 — Final Thoughts</div>
-    <div class="step-title">Anything Else?</div>
-    <p class="step-desc">Any general patterns you noticed — unusual phrasing, topics that surprised you, or areas where the exam felt out of scope.</p>
-
-    <div class="field">
-      <label>General comments about the exam language or style</label>
-      <textarea id="general-comments" placeholder="e.g. Several questions used double negatives which made them hard to parse. The meteorology section used terms I hadn't seen before..."></textarea>
-    </div>
-
-    <div class="field">
-      <label>Topics NOT covered in your Stoneybrook course but appeared in the exam</label>
-      <textarea id="missing-topics" placeholder="e.g. There were questions about SIGMET decoding that weren't in the course..." style="min-height:80px"></textarea>
-    </div>
-
-    <div class="field">
-      <label>How confident did you feel going into the exam?</label>
-      <div class="rating-wrap">
-        <input type="radio" name="confidence" id="c1" value="1"><label for="c1">1</label>
-        <input type="radio" name="confidence" id="c2" value="2"><label for="c2">2</label>
-        <input type="radio" name="confidence" id="c3" value="3"><label for="c3">3</label>
-        <input type="radio" name="confidence" id="c4" value="4"><label for="c4">4</label>
-        <input type="radio" name="confidence" id="c5" value="5"><label for="c5">5</label>
+          <div class="field">
+            <label>Pass / Fail</label>
+            <div class="pill-group">
+              <input type="radio" name="result" id="r-pass" value="Pass"><label for="r-pass">Pass</label>
+              <input type="radio" name="result" id="r-fail" value="Fail"><label for="r-fail">Fail</label>
+              <input type="radio" name="result" id="r-na" value="Prefer not to say"><label for="r-na">Prefer not to say</label>
+            </div>
+          </div>
+        </div>
+        <div class="nav">
+          <button class="btn-back" onclick="goTo(2)">← Back</button>
+          <button class="btn-submit" onclick="submitForm()">Submit Feedback →</button>
+        </div>
       </div>
-      <div class="rating-ends"><span>Not at all</span><span>Very Confident</span></div>
-    </div>
 
-    <div class="field">
-      <label>Pass / Fail</label>
-      <div class="pill-group">
-        <input type="radio" name="result" id="r-pass" value="Pass"><label for="r-pass">Pass</label>
-        <input type="radio" name="result" id="r-fail" value="Fail"><label for="r-fail">Fail</label>
-        <input type="radio" name="result" id="r-na" value="Prefer not to say"><label for="r-na">Prefer not to say</label>
+      <!-- SUCCESS -->
+      <div class="step" id="step-4">
+        <div class="card success-screen">
+          <div class="success-icon">✓</div>
+          <h2>Thank you!</h2>
+          <p>Your anonymous feedback has been submitted and will be reviewed by the Stoneybrook Training team. This helps us align our course language with pilot exams for future students.</p>
+          <button class="new-btn" onclick="startNew()">Submit Another Exam →</button>
+        </div>
       </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        © 2026 <a href="https://www.stoneybrook.training" target="_blank">Stoneybrook Training</a> — Online Pilot Theory & Aviation Industry Courses
+      </div>
+
     </div>
   </div>
-  <div class="nav">
-    <button class="btn-back" onclick="goTo(2)">← Back</button>
-    <button class="btn-submit" onclick="submitForm()">Submit Feedback →</button>
-  </div>
-</div>
 
-<!-- SUCCESS -->
+  <script>
+    let currentStep = 1;
+    let questionCount = 0;
+    const TOTAL_STEPS = 3;
+    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwt2KP2Yn_jcDSfAdhBInTU3fxcUZQ8rLlcqn8umLbRnfbcirlnxMmwGNtMxZHOj8md/exec';
 
-<div class="step" id="step-4">
-  <div class="card success-screen">
-    <div class="success-icon">✓</div>
-    <h2>Thank you!</h2>
-    <p>Your anonymous feedback has been submitted and will be reviewed by the Stoneybrook Training team. This helps us align our course language with pilot exams for future students.</p>
-    <button class="new-btn" onclick="startNew()">Submit Another Exam →</button>
-  </div>
-</div>
+    const SUBJECT_MAP = {
+      PPL: [
+        'PPL Air Law',
+        'PPL Meteorology',
+        'PPL Navigation',
+        'PPL Human Factors',
+        'PPL Aircraft Technical Knowledge (Aeroplane)',
+        'PPL Aircraft Technical Knowledge (Helicopter)',
+        'PPL Flight Radiotelephony'
+      ],
+      CPL: [
+        'CPL Air Law (Aeroplane)',
+        'CPL Air Law (Helicopter)',
+        'CPL Meteorology',
+        'CPL Navigation',
+        'CPL Human Factors',
+        'CPL Principles of Flight (Aeroplane)',
+        'CPL Principles of Flight & Aircraft Performance (Helicopter)',
+        'CPL Aircraft Technical Knowledge (Aeroplane)',
+        'CPL General Aircraft Technical Knowledge (Helicopter)'
+      ],
+      ATPL: [
+        'ATPL Air Law',
+        'ATPL Meteorology',
+        'ATPL Human Factors',
+        'ATPL Advanced Aerodynamics, Performance & Systems Knowledge',
+        'ATPL Instruments & Navigation Aids',
+        'ATPL Flight Navigation',
+        'ATPL Flight Planning'
+      ],
+      Ratings: [
+        'IFR Air Law',
+        'IFR Flight Navigation',
+        'IFR Instruments & Navigation Aids',
+        'IR Operational Knowledge (PPL holders)',
+        'Basic Turbine Knowledge (Aeroplane)',
+        'Basic Turbine Knowledge (Helicopter)',
+        'Performance Based Navigation (PBN)',
+        'NDB/ADF Knowledge'
+      ]
+    };
 
-<!-- Footer -->
-<div class="footer">
-  © 2026 <a href="https://www.stoneybrook.training" target="_blank">Stoneybrook Training</a> — Online Pilot Theory & Aviation Industry Courses
-</div>
-
-</div>
-
-<script>
-let currentStep = 1;
-let questionCount = 0;
-const TOTAL_STEPS = 3;
-
-const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwt2KP2Yn_jcDSfAdhBInTU3fxcUZQ8rLlcqn8umLbRnfbcirlnxMmwGNtMxZHOj8md/exec';
-
-const SUBJECT_MAP = {
-  PPL: [
-    'PPL Air Law',
-    'PPL Meteorology',
-    'PPL Navigation',
-    'PPL Human Factors',
-    'PPL Aircraft Technical Knowledge (Aeroplane)',
-    'PPL Aircraft Technical Knowledge (Helicopter)',
-    'PPL Flight Radiotelephony'
-  ],
-  CPL: [
-    'CPL Air Law (Aeroplane)',
-    'CPL Air Law (Helicopter)',
-    'CPL Meteorology',
-    'CPL Navigation',
-    'CPL Human Factors',
-    'CPL Principles of Flight (Aeroplane)',
-    'CPL Principles of Flight & Aircraft Performance (Helicopter)',
-    'CPL Aircraft Technical Knowledge (Aeroplane)',
-    'CPL General Aircraft Technical Knowledge (Helicopter)'
-  ],
-  ATPL: [
-    'ATPL Air Law',
-    'ATPL Meteorology',
-    'ATPL Human Factors',
-    'ATPL Advanced Aerodynamics, Performance & Systems Knowledge',
-    'ATPL Instruments & Navigation Aids',
-    'ATPL Flight Navigation',
-    'ATPL Flight Planning'
-  ],
-  Ratings: [
-    'IFR Air Law',
-    'IFR Flight Navigation',
-    'IFR Instruments & Navigation Aids',
-    'IR Operational Knowledge (PPL holders)',
-    'Basic Turbine Knowledge (Aeroplane)',
-    'Basic Turbine Knowledge (Helicopter)',
-    'Performance Based Navigation (PBN)',
-    'NDB/ADF Knowledge'
-  ]
-};
-
-function updateSubjects() {
-  const cat = document.querySelector('input[name="category"]:checked')?.value;
-  const field = document.getElementById('subject-field');
-  const sel = document.getElementById('subject-select');
-  if (!cat) { field.style.display = 'none'; return; }
-  field.style.display = 'block';
-  sel.innerHTML = '<option value="">— Select subject —</option>';
-  SUBJECT_MAP[cat].forEach(s => {
-    const opt = document.createElement('option');
-    opt.value = s;
-    opt.textContent = s;
-    sel.appendChild(opt);
-  });
-}
-
-window.onload = () => addQuestion();
-
-function goTo(step) {
-  if (step > currentStep && !validateStep(currentStep)) return;
-  document.getElementById(`step-${currentStep}`).classList.remove('active');
-  currentStep = step;
-  document.getElementById(`step-${currentStep}`).classList.add('active');
-  updateProgress();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function updateProgress() {
-  const pct = Math.round((Math.min(currentStep, TOTAL_STEPS) / TOTAL_STEPS) * 100);
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-label').textContent = `Step ${Math.min(currentStep, TOTAL_STEPS)} of ${TOTAL_STEPS}`;
-  document.getElementById('progress-pct').textContent = pct + '%';
-}
-
-function validateStep(step) {
-  if (step === 1) {
-    if (!document.getElementById('exam-date').value.trim()) {
-      alert('Please enter the approximate exam date.');
-      return false;
+    function updateSubjects() {
+      const cat = document.querySelector('input[name="category"]:checked')?.value;
+      const field = document.getElementById('subject-field');
+      const sel = document.getElementById('subject-select');
+      if (!cat) { field.style.display = 'none'; return; }
+      field.style.display = 'block';
+      sel.innerHTML = '<option value="">— Select subject —</option>';
+      SUBJECT_MAP[cat].forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.textContent = s;
+        sel.appendChild(opt);
+      });
     }
-    if (!document.querySelector('input[name="category"]:checked')) {
-      alert('Please select a licence category.');
-      return false;
+
+    window.onload = () => addQuestion();
+
+    function goTo(step) {
+      if (step > currentStep && !validateStep(currentStep)) return;
+      document.getElementById(`step-${currentStep}`).classList.remove('active');
+      currentStep = step;
+      document.getElementById(`step-${currentStep}`).classList.add('active');
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    if (!document.getElementById('subject-select').value) {
-      alert('Please select the exam subject.');
-      return false;
+
+    function updateProgress() {
+      const pct = Math.round((Math.min(currentStep, TOTAL_STEPS) / TOTAL_STEPS) * 100);
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('progress-label').textContent = `Step ${Math.min(currentStep, TOTAL_STEPS)} of ${TOTAL_STEPS}`;
+      document.getElementById('progress-pct').textContent = pct + '%';
     }
-    if (!document.querySelector('input[name="difficulty"]:checked')) {
-      alert('Please rate the exam difficulty.');
-      return false;
+
+    function validateStep(step) {
+      if (step === 1) {
+        if (!document.getElementById('exam-date').value.trim()) {
+          alert('Please enter the approximate exam date.'); return false;
+        }
+        if (!document.querySelector('input[name="category"]:checked')) {
+          alert('Please select a licence category.'); return false;
+        }
+        if (!document.getElementById('subject-select').value) {
+          alert('Please select the exam subject.'); return false;
+        }
+        if (!document.querySelector('input[name="difficulty"]:checked')) {
+          alert('Please rate the exam difficulty.'); return false;
+        }
+      }
+      return true;
     }
-  }
-  return true;
-}
 
-function addQuestion() {
-  questionCount++;
-  const container = document.getElementById('questions-container');
-  const block = document.createElement('div');
-  block.className = 'question-block';
-  block.id = `q-block-${questionCount}`;
-  const qNum = questionCount;
-
-  block.innerHTML = `
-    <div class="q-number">Question ${qNum}</div>
-    ${qNum > 1 ? `<button class="remove-q" onclick="removeQuestion(${qNum})" title="Remove">&times;</button>` : ''}
-
-    <div class="field">
-      <label>Topic / Subject Area</label>
-      <input type="text" id="q${qNum}-topic" placeholder="e.g. VFR weather minima, Class C airspace, ATIS format...">
-    </div>
-
-    <div class="field">
-      <label>Question wording (as best you can recall)</label>
-      <textarea id="q${qNum}-wording" placeholder="e.g. 'A pilot is required to... when operating within...' — don't worry about exact words" style="min-height:80px"></textarea>
-    </div>
-
-    <div class="field">
-      <label>Answer options given (A, B, C, D)</label>
-      <div class="option-row"><div class="option-letter">A</div><input type="text" id="q${qNum}-a" placeholder="Option A text"></div>
-      <div class="option-row"><div class="option-letter">B</div><input type="text" id="q${qNum}-b" placeholder="Option B text"></div>
-      <div class="option-row"><div class="option-letter">C</div><input type="text" id="q${qNum}-c" placeholder="Option C text"></div>
-      <div class="option-row"><div class="option-letter">D</div><input type="text" id="q${qNum}-d" placeholder="Option D text"></div>
-    </div>
-
-    <div class="field">
-      <label>Which answer did you select?</label>
-      <div class="pill-group">
-        <input type="radio" name="q${qNum}-chosen" id="q${qNum}-ca" value="A"><label for="q${qNum}-ca">A</label>
-        <input type="radio" name="q${qNum}-chosen" id="q${qNum}-cb" value="B"><label for="q${qNum}-cb">B</label>
-        <input type="radio" name="q${qNum}-chosen" id="q${qNum}-cc" value="C"><label for="q${qNum}-cc">C</label>
-        <input type="radio" name="q${qNum}-chosen" id="q${qNum}-cd" value="D"><label for="q${qNum}-cd">D</label>
-        <input type="radio" name="q${qNum}-chosen" id="q${qNum}-cdnk" value="Don't know"><label for="q${qNum}-cdnk">Don't recall</label>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>What was confusing about this question?</label>
-      <div class="pill-group" style="margin-bottom:10px">
-        <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why1" value="Unfamiliar wording"><label for="q${qNum}-why1">Unfamiliar wording</label>
-        <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why2" value="Double negative"><label for="q${qNum}-why2">Double negative</label>
-        <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why3" value="Topic not in course"><label for="q${qNum}-why3">Topic not in course</label>
-        <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why4" value="Two answers seemed correct"><label for="q${qNum}-why4">Two answers seemed correct</label>
-        <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why5" value="Ambiguous question"><label for="q${qNum}-why5">Ambiguous question</label>
-        <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why6" value="Trick wording"><label for="q${qNum}-why6">Trick wording</label>
-      </div>
-      <input type="text" id="q${qNum}-other-why" placeholder="Other reason (optional)">
-    </div>
-  `;
-
-  container.appendChild(block);
-}
-
-function removeQuestion(num) {
-  const block = document.getElementById(`q-block-${num}`);
-  if (block) block.remove();
-}
-
-function collectData() {
-  const data = {
-    submitted: new Date().toLocaleString('en-NZ'),
-    student: {
-      name: '',
-      email: '',
-      school: document.getElementById('student-school').value,
-      examDate: document.getElementById('exam-date').value,
-    },
-    exam: {
-      subject: document.getElementById('subject-select').value || '',
-      difficulty: document.querySelector('input[name="difficulty"]:checked')?.value || '',
-      languageMatch: document.querySelector('input[name="language-match"]:checked')?.value || '',
-    },
-    questions: [],
-    summary: {
-      generalComments: document.getElementById('general-comments').value,
-      missingTopics: document.getElementById('missing-topics').value,
-      confidenceBeforeExam: document.querySelector('input[name="confidence"]:checked')?.value || '',
-      result: document.querySelector('input[name="result"]:checked')?.value || '',
+    function addQuestion() {
+      questionCount++;
+      const container = document.getElementById('questions-container');
+      const block = document.createElement('div');
+      block.className = 'question-block';
+      block.id = `q-block-${questionCount}`;
+      const qNum = questionCount;
+      block.innerHTML = `
+        <div class="q-number">Question ${qNum}</div>
+        ${qNum > 1 ? `<button class="remove-q" onclick="removeQuestion(${qNum})" title="Remove">&times;</button>` : ''}
+        <div class="field">
+          <label>Topic / Subject Area</label>
+          <input type="text" id="q${qNum}-topic" placeholder="e.g. VFR weather minima, Class C airspace, ATIS format...">
+        </div>
+        <div class="field">
+          <label>Question wording (as best you can recall)</label>
+          <textarea id="q${qNum}-wording" placeholder="e.g. 'A pilot is required to... when operating within...' — don't worry about exact words" style="min-height:80px"></textarea>
+        </div>
+        <div class="field">
+          <label>Answer options given (A, B, C, D)</label>
+          <div class="option-row"><div class="option-letter">A</div><input type="text" id="q${qNum}-a" placeholder="Option A text"></div>
+          <div class="option-row"><div class="option-letter">B</div><input type="text" id="q${qNum}-b" placeholder="Option B text"></div>
+          <div class="option-row"><div class="option-letter">C</div><input type="text" id="q${qNum}-c" placeholder="Option C text"></div>
+          <div class="option-row"><div class="option-letter">D</div><input type="text" id="q${qNum}-d" placeholder="Option D text"></div>
+        </div>
+        <div class="field">
+          <label>Which answer did you select?</label>
+          <div class="pill-group">
+            <input type="radio" name="q${qNum}-chosen" id="q${qNum}-ca" value="A"><label for="q${qNum}-ca">A</label>
+            <input type="radio" name="q${qNum}-chosen" id="q${qNum}-cb" value="B"><label for="q${qNum}-cb">B</label>
+            <input type="radio" name="q${qNum}-chosen" id="q${qNum}-cc" value="C"><label for="q${qNum}-cc">C</label>
+            <input type="radio" name="q${qNum}-chosen" id="q${qNum}-cd" value="D"><label for="q${qNum}-cd">D</label>
+            <input type="radio" name="q${qNum}-chosen" id="q${qNum}-cdnk" value="Don't know"><label for="q${qNum}-cdnk">Don't recall</label>
+          </div>
+        </div>
+        <div class="field">
+          <label>What was confusing about this question?</label>
+          <div class="pill-group" style="margin-bottom:10px">
+            <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why1" value="Unfamiliar wording"><label for="q${qNum}-why1">Unfamiliar wording</label>
+            <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why2" value="Double negative"><label for="q${qNum}-why2">Double negative</label>
+            <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why3" value="Topic not in course"><label for="q${qNum}-why3">Topic not in course</label>
+            <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why4" value="Two answers seemed correct"><label for="q${qNum}-why4">Two answers seemed correct</label>
+            <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why5" value="Ambiguous question"><label for="q${qNum}-why5">Ambiguous question</label>
+            <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why6" value="Trick wording"><label for="q${qNum}-why6">Trick wording</label>
+          </div>
+          <input type="text" id="q${qNum}-other-why" placeholder="Other reason (optional)">
+        </div>
+      `;
+      container.appendChild(block);
     }
-  };
 
-  document.querySelectorAll('.question-block').forEach((block, i) => {
-    const num = block.id.replace('q-block-', '');
-    const reasons = [];
-    document.querySelectorAll(`input[name="q${num}-why"]:checked`).forEach(cb => reasons.push(cb.value));
-    const otherReason = document.getElementById(`q${num}-other-why`)?.value;
-    if (otherReason) reasons.push(otherReason);
+    function removeQuestion(num) {
+      const block = document.getElementById(`q-block-${num}`);
+      if (block) block.remove();
+    }
 
-    data.questions.push({
-      questionNumber: i + 1,
-      topic: document.getElementById(`q${num}-topic`)?.value || '',
-      wording: document.getElementById(`q${num}-wording`)?.value || '',
-      options: {
-        A: document.getElementById(`q${num}-a`)?.value || '',
-        B: document.getElementById(`q${num}-b`)?.value || '',
-        C: document.getElementById(`q${num}-c`)?.value || '',
-        D: document.getElementById(`q${num}-d`)?.value || '',
-      },
-      answerChosen: document.querySelector(`input[name="q${num}-chosen"]:checked`)?.value || '',
-      confusionReasons: reasons,
-    });
-  });
+    function collectData() {
+      const data = {
+        submitted: new Date().toLocaleString('en-NZ'),
+        student: {
+          name: '',
+          email: '',
+          school: document.getElementById('student-school').value,
+          examDate: document.getElementById('exam-date').value,
+        },
+        exam: {
+          subject: document.getElementById('subject-select').value || '',
+          difficulty: document.querySelector('input[name="difficulty"]:checked')?.value || '',
+          languageMatch: document.querySelector('input[name="language-match"]:checked')?.value || '',
+        },
+        questions: [],
+        summary: {
+          generalComments: document.getElementById('general-comments').value,
+          missingTopics: document.getElementById('missing-topics').value,
+          confidenceBeforeExam: document.querySelector('input[name="confidence"]:checked')?.value || '',
+          result: document.querySelector('input[name="result"]:checked')?.value || '',
+        }
+      };
+      document.querySelectorAll('.question-block').forEach((block, i) => {
+        const num = block.id.replace('q-block-', '');
+        const reasons = [];
+        document.querySelectorAll(`input[name="q${num}-why"]:checked`).forEach(cb => reasons.push(cb.value));
+        const otherReason = document.getElementById(`q${num}-other-why`)?.value;
+        if (otherReason) reasons.push(otherReason);
+        data.questions.push({
+          questionNumber: i + 1,
+          topic: document.getElementById(`q${num}-topic`)?.value || '',
+          wording: document.getElementById(`q${num}-wording`)?.value || '',
+          options: {
+            A: document.getElementById(`q${num}-a`)?.value || '',
+            B: document.getElementById(`q${num}-b`)?.value || '',
+            C: document.getElementById(`q${num}-c`)?.value || '',
+            D: document.getElementById(`q${num}-d`)?.value || '',
+          },
+          answerChosen: document.querySelector(`input[name="q${num}-chosen"]:checked`)?.value || '',
+          confusionReasons: reasons,
+        });
+      });
+      return data;
+    }
 
-  return data;
-}
+    function submitForm() {
+      const data = collectData();
+      const submitBtn = document.querySelector('.btn-submit');
+      const originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Submitting...';
+      submitBtn.disabled = true;
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(() => { goTo(4); })
+      .catch((err) => {
+        alert('There was a problem submitting your feedback. Please try again.');
+        console.error('Submission error:', err);
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+      });
+    }
 
-function submitForm() {
-  const data = collectData();
-
-  const submitBtn = document.querySelector('.btn-submit');
-  const originalText = submitBtn.textContent;
-  submitBtn.textContent = 'Submitting...';
-  submitBtn.disabled = true;
-
-  fetch(WEBHOOK_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  })
-  .then(() => {
-    goTo(4);
-  })
-  .catch((err) => {
-    alert('There was a problem submitting your feedback. Please try again.');
-    console.error('Submission error:', err);
-    submitBtn.textContent = originalText;
-    submitBtn.disabled = false;
-  });
-}
-
-function startNew() {
-  location.reload();
-}
-</script>
-
+    function startNew() { location.reload(); }
+  </script>
 </body>
 </html>
