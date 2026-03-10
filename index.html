@@ -529,17 +529,6 @@
           <p class="step-desc">Tell us which exam you sat and how it went overall.</p>
 
           <div class="field">
-            <label>Flying School / Organisation <span class="opt">(optional)</span></label>
-            <input type="text" id="student-school" placeholder="e.g. Auckland Aero Club">
-          </div>
-          <div class="field">
-            <label>Exam Date (approximate) <span class="req">*</span></label>
-            <input type="text" id="exam-date" placeholder="e.g. March 2026">
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="field">
             <label>Licence category <span class="req">*</span></label>
             <div class="pill-group" id="category-group">
               <input type="radio" name="category" id="cat-ppl" value="PPL" onchange="updateSubjects()">
@@ -764,9 +753,6 @@
 
     function validateStep(step) {
       if (step === 1) {
-        if (!document.getElementById('exam-date').value.trim()) {
-          alert('Please enter the approximate exam date.'); return false;
-        }
         if (!document.querySelector('input[name="category"]:checked')) {
           alert('Please select a licence category.'); return false;
         }
@@ -842,8 +828,8 @@
         student: {
           name: '',
           email: '',
-          school: document.getElementById('student-school').value,
-          examDate: document.getElementById('exam-date').value,
+          school: '',
+          examDate: '',
         },
         exam: {
           subject: document.getElementById('subject-select').value || '',
