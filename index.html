@@ -4,1048 +4,319 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exam Feedback — Stoneybrook Training</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f5f7fa;
-            --bg-card: #ffffff;
             --teal: #139DA3;
             --teal-dark: #0e7a7f;
-            --teal-light: rgba(19,157,163,0.08);
             --gold: #BBB546;
-            --gold-dark: #9a8c2e;
-            --text: #1F2528;
-            --text-secondary: #3D4A50;
-            --muted: #64748b;
-            --border: #e2e8f0;
-            --border-focus: rgba(19,157,163,0.4);
-            --input-bg: #f8fafc;
-            --success: #22c55e;
-            --header-bg: #1F2528;
+            --charcoal: #1F2528;
             --cream: #EDECE6;
+            --white: #ffffff;
+            --text: #1F2528;
+            --muted: #6B7280;
+            --border: #e2e8f0;
         }
+        
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
             background: var(--cream);
             color: var(--text);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Dark header banner */
-        .header-banner {
-            background: var(--header-bg);
-            padding: 48px 24px 56px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .header-banner::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(ellipse 80% 50% at 20% 0%, rgba(19,157,163,0.12) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(187,181,70,0.06) 0%, transparent 60%);
-            pointer-events: none;
-        }
-        .header-banner > * { position: relative; z-index: 1; }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 0 24px 80px;
-        }
-        .form-body { margin-top: -32px; position: relative; z-index: 2; }
-
-        /* Header */
-        .logo-wordmark {
-            margin-bottom: 28px;
-            font-size: clamp(28px, 6vw, 42px);
-            font-weight: 900;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            line-height: 1;
-        }
-        .logo-wordmark .stoney { color: #ffffff; }
-        .logo-wordmark .brook { color: var(--gold); }
-        .logo-sub {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: #2ab5b2;
-            margin-top: 6px;
-        }
-        h1 {
-            font-size: clamp(22px, 4.5vw, 32px);
-            font-weight: 700;
-            line-height: 1.2;
-            color: #ffffff;
-            margin-bottom: 14px;
-            margin-top: 24px;
-        }
-        h1 span { color: #2ab5b2; }
-        .subtitle {
-            font-size: 14px;
-            color: rgba(255,255,255,0.65);
-            line-height: 1.7;
-            max-width: 560px;
-            margin: 0 auto;
-        }
-        .anon-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 16px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            background: rgba(42,181,178,0.12);
-            border: 1px solid rgba(42,181,178,0.25);
-            font-size: 12px;
-            color: #2ab5b2;
-            font-weight: 500;
-        }
-
-        /* Progress bar */
-        .progress-wrap { margin-bottom: 28px; padding-top: 24px; }
-        .progress-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            font-family: 'DM Mono', monospace;
-            color: var(--muted);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-        .progress-bar {
-            height: 3px;
-            background: var(--border);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--teal-dark), var(--teal));
-            border-radius: 4px;
-            transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
-        }
-
-        /* Steps */
-        .step { display: none; animation: fadeUp 0.35s ease both; }
-        .step.active { display: block; }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Cards */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 28px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
-        }
-        .step-label {
-            font-size: 11px;
-            font-family: 'DM Mono', monospace;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--gold-dark);
-            margin-bottom: 6px;
-        }
-        .step-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 6px;
-        }
-        .step-desc {
-            font-size: 13px;
-            color: var(--muted);
             line-height: 1.6;
-            margin-bottom: 24px;
+            min-height: 100vh;
         }
-
-        /* Form fields */
-        .field { margin-bottom: 20px; }
-        label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 7px;
-            letter-spacing: 0.02em;
-        }
-        label .req { color: var(--teal); margin-left: 2px; }
-        label .opt { color: var(--muted); font-weight: 400; font-size: 11px; margin-left: 4px; }
-        input[type="text"], input[type="email"], select, textarea {
-            width: 100%;
-            background: var(--input-bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px 16px;
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-            -webkit-appearance: none;
-        }
-        input[type="text"]:focus, input[type="email"]:focus, select:focus, textarea:focus {
-            border-color: var(--teal);
-            background: #ffffff;
-            box-shadow: 0 0 0 3px rgba(19,157,163,0.1);
-        }
-        input[type="text"]::placeholder, textarea::placeholder { color: #94a3b8; }
-        textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
-        select option { background: #fff; color: var(--text); }
-
-        /* Radio / Checkbox pills */
-        .pill-group { display: flex; flex-wrap: wrap; gap: 8px; }
-        .pill-group input { display: none; }
-        .pill-group label {
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 30px;
-            border: 1px solid var(--border);
-            background: #ffffff;
-            font-size: 13px;
-            font-weight: 400;
-            color: var(--muted);
-            transition: all 0.18s;
-            margin-bottom: 0;
-            letter-spacing: 0;
-        }
-        .pill-group input:checked + label {
-            background: var(--teal-light);
-            border-color: var(--teal);
-            color: var(--teal);
-            font-weight: 500;
-        }
-        .pill-group label:hover { border-color: rgba(19,157,163,0.5); color: var(--text); }
-
-        /* Rating scale */
-        .rating-wrap { display: flex; gap: 8px; }
-        .rating-wrap input { display: none; }
-        .rating-wrap label {
-            flex: 1;
+        
+        .header {
+            background: var(--charcoal);
+            padding: 40px 24px;
             text-align: center;
-            padding: 10px 4px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: #ffffff;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--muted);
-            transition: all 0.18s;
-            margin-bottom: 0;
-            letter-spacing: 0;
         }
-        .rating-wrap input:checked + label {
-            background: var(--teal-light);
-            border-color: var(--teal);
-            color: var(--teal-dark);
+        
+        .logo { font-size: 32px; font-weight: 800; letter-spacing: 0.05em; }
+        .logo .stone { color: var(--white); }
+        .logo .brook { color: var(--gold); }
+        
+        h1 {
+            color: var(--white);
+            font-size: 24px;
+            margin-top: 16px;
         }
-        .rating-ends {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            color: var(--muted);
-            margin-top: 6px;
-            font-family: 'DM Mono', monospace;
-        }
-
-        /* Add button */
-        .add-btn {
-            width: 100%;
-            padding: 12px;
-            background: var(--teal-light);
-            border: 1px dashed rgba(19,157,163,0.3);
-            border-radius: 10px;
-            color: var(--teal);
-            font-family: 'Inter', sans-serif;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
+        
+        .subtitle {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
             margin-top: 8px;
         }
-        .add-btn:hover { background: rgba(19,157,163,0.12); border-color: var(--teal); }
-
-        /* Nav buttons */
-        .nav { display: flex; gap: 12px; margin-top: 24px; }
-        .btn-back {
-            padding: 13px 24px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: #ffffff;
-            color: var(--muted);
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
+        
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
         }
-        .btn-back:hover { border-color: #cbd5e1; color: var(--text); background: #f8fafc; }
-        .btn-next, .btn-submit {
-            flex: 1;
-            padding: 13px 24px;
-            border-radius: 10px;
-            border: none;
-            background: linear-gradient(135deg, var(--teal-dark), var(--teal));
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            letter-spacing: 0.02em;
-        }
-        .btn-next:hover, .btn-submit:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(19,157,163,0.2);
-        }
-        .btn-next:active, .btn-submit:active { transform: translateY(0); }
-        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-
-        /* Question block */
-        .question-block {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+        
+        .card {
+            background: var(--white);
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-            position: relative;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
-        .q-number {
-            font-size: 11px;
-            font-family: 'DM Mono', monospace;
-            color: var(--gold-dark);
+        
+        .step-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gold);
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            margin-bottom: 14px;
+            margin-bottom: 8px;
         }
-        .remove-q {
-            position: absolute;
-            top: 16px;
-            right: 16px;
+        
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .description {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        
+        .field { margin-bottom: 20px; }
+        
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        
+        label .req { color: var(--teal); }
+        
+        select, input[type="text"], textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            background: #f8fafc;
+        }
+        
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(19,157,163,0.1);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
             background: #f8fafc;
             border: 1px solid var(--border);
-            border-radius: 6px;
-            width: 28px;
-            height: 28px;
-            color: var(--muted);
-            font-size: 16px;
+            border-radius: 8px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.15s;
-            line-height: 1;
+            font-weight: 400;
         }
-        .remove-q:hover {
-            background: rgba(220,38,38,0.08);
-            border-color: rgba(220,38,38,0.25);
-            color: #dc2626;
-        }
-
-        /* Success screen */
-        .success-screen { text-align: center; padding: 48px 24px; }
-        .success-icon {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: var(--teal-light);
-            border: 2px solid rgba(19,157,163,0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            margin: 0 auto 24px;
+        
+        .radio-group input:checked + span {
             color: var(--teal);
+            font-weight: 500;
         }
-        .success-screen h2 {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text);
+        
+        .radio-group label:has(input:checked) {
+            border-color: var(--teal);
+            background: rgba(19,157,163,0.05);
         }
-        .success-screen p {
-            font-size: 14px;
-            color: var(--muted);
-            line-height: 1.7;
-            max-width: 460px;
-            margin: 0 auto 28px;
-        }
-        .new-btn, .kdr-btn {
-            padding: 11px 24px;
-            border-radius: 10px;
-            border: none;
-            font-family: 'Inter', sans-serif;
+        
+        .hint {
             font-size: 13px;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+        
+        .compliance-note {
+            background: rgba(19,157,163,0.08);
+            border-left: 3px solid var(--teal);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px 24px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-block;
+            transition: background 0.2s;
         }
-        .new-btn {
-            background: linear-gradient(135deg, var(--teal-dark), var(--teal));
-            color: #fff;
+        
+        .btn:hover { background: var(--teal-dark); }
+        
+        .success {
+            text-align: center;
+            padding: 40px 20px;
         }
-        .kdr-btn {
-            background: #ffffff;
+        
+        .success h2 { color: var(--teal); margin-bottom: 16px; }
+        
+        .success a {
             color: var(--teal);
-            border: 1px solid var(--teal);
-            margin-left: 10px;
+            text-decoration: none;
         }
-        .kdr-btn:hover { background: var(--teal-light); }
-
-        /* Info box */
-        .info-box {
-            background: rgba(187,181,70,0.06);
-            border: 1px solid rgba(187,181,70,0.18);
-            border-radius: 10px;
-            padding: 14px 16px;
-            font-size: 13px;
-            color: var(--gold-dark);
-            line-height: 1.6;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-        }
-        .info-box .icon { flex-shrink: 0; font-size: 15px; margin-top: 1px; }
-        .info-box.teal {
-            background: var(--teal-light);
-            border-color: rgba(19,157,163,0.18);
-            color: var(--teal-dark);
-        }
-
-        /* Compliance notice */
-        .compliance-note {
-            background: rgba(19,157,163,0.04);
-            border: 1px solid rgba(19,157,163,0.12);
-            border-radius: 10px;
-            padding: 14px 16px;
-            font-size: 12px;
-            color: var(--muted);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        .compliance-note strong { color: var(--text-secondary); }
-
-        /* Divider */
-        .divider { height: 1px; background: var(--border); margin: 24px 0; }
-
-        /* Footer */
+        
+        .hidden { display: none; }
+        
         .footer {
             text-align: center;
-            margin-top: 48px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
-            font-size: 11px;
-            color: #94a3b8;
-            letter-spacing: 0.05em;
-        }
-        .footer a { color: var(--teal); text-decoration: none; }
-        .footer a:hover { text-decoration: underline; }
-
-        /* Responsive */
-        @media (max-width: 480px) {
-            .header-banner { padding: 32px 16px 48px; }
-            .container { padding: 0 16px 60px; }
-            .rating-wrap label { font-size: 13px; }
-            .logo-wordmark { font-size: 28px; }
-            .success-buttons { display: flex; flex-direction: column; gap: 10px; }
-            .kdr-btn { margin-left: 0; }
+            padding: 24px;
+            font-size: 13px;
+            color: var(--muted);
         }
     </style>
 </head>
 <body>
-
-    <!-- Dark header banner -->
-    <div class="header-banner">
-        <div class="logo-wordmark">
-            <span class="stoney">STONEY</span><span class="brook">BROOK</span>
-            <div class="logo-sub">Online Theory Courses</div>
-        </div>
-        <h1>Exam Language<br><span>Feedback</span></h1>
-        <p class="subtitle">Help us improve your training by telling us about the language and phrasing used in your recent ASPEQ exam. This helps us align our course materials with the exam style — especially for students where English is a second language.</p>
-        <div class="anon-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Anonymous — your identity is not recorded
-        </div>
+    <div class="header">
+        <div class="logo"><span class="stone">STONEY</span><span class="brook">BROOK</span></div>
+        <h1>Exam Feedback</h1>
+        <p class="subtitle">Help us improve our courses — 2 minutes, anonymous</p>
     </div>
-
+    
     <div class="container">
-        <div class="form-body">
-
-            <!-- Progress -->
-            <div class="progress-wrap">
-                <div class="progress-labels">
-                    <span id="progress-label">Step 1 of 3</span>
-                    <span id="progress-pct">33%</span>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:33%"></div></div>
-            </div>
-
-            <!-- STEP 1: The Exam -->
-            <div class="step active" id="step-1">
-                <div class="card">
-                    <div class="step-label">Step 1 — The Exam</div>
-                    <div class="step-title">Exam Details</div>
-                    <p class="step-desc">Tell us which exam you sat and how it went overall.</p>
-
-                    <div class="field">
-                        <label>Licence category <span class="req">*</span></label>
-                        <div class="pill-group" id="category-group">
-                            <input type="radio" name="category" id="cat-ppl" value="PPL" onchange="updateSubjects()">
-                            <label for="cat-ppl">PPL</label>
-                            <input type="radio" name="category" id="cat-cpl" value="CPL" onchange="updateSubjects()">
-                            <label for="cat-cpl">CPL</label>
-                            <input type="radio" name="category" id="cat-atpl" value="ATPL" onchange="updateSubjects()">
-                            <label for="cat-atpl">ATPL</label>
-                            <input type="radio" name="category" id="cat-ratings" value="Ratings" onchange="updateSubjects()">
-                            <label for="cat-ratings">Ratings</label>
-                        </div>
-                    </div>
-
-                    <div class="field" id="subject-field" style="display:none;">
-                        <label>Which subject? <span class="req">*</span></label>
-                        <select id="subject-select">
-                            <option value="">— Select subject —</option>
-                        </select>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <div class="field">
-                        <label>Overall exam difficulty <span class="req">*</span></label>
-                        <div class="rating-wrap">
-                            <input type="radio" name="difficulty" id="d1" value="1"><label for="d1">1</label>
-                            <input type="radio" name="difficulty" id="d2" value="2"><label for="d2">2</label>
-                            <input type="radio" name="difficulty" id="d3" value="3"><label for="d3">3</label>
-                            <input type="radio" name="difficulty" id="d4" value="4"><label for="d4">4</label>
-                            <input type="radio" name="difficulty" id="d5" value="5"><label for="d5">5</label>
-                        </div>
-                        <div class="rating-ends"><span>Very Easy</span><span>Very Hard</span></div>
-                    </div>
-
-                    <div class="field">
-                        <label>How well did our course language match the exam language?</label>
-                        <div class="rating-wrap">
-                            <input type="radio" name="language-match" id="l1" value="1"><label for="l1">1</label>
-                            <input type="radio" name="language-match" id="l2" value="2"><label for="l2">2</label>
-                            <input type="radio" name="language-match" id="l3" value="3"><label for="l3">3</label>
-                            <input type="radio" name="language-match" id="l4" value="4"><label for="l4">4</label>
-                            <input type="radio" name="language-match" id="l5" value="5"><label for="l5">5</label>
-                        </div>
-                        <div class="rating-ends"><span>Very Different</span><span>Very Similar</span></div>
-                    </div>
-
-                    <div class="field">
-                        <label>Is English your first language?</label>
-                        <div class="pill-group">
-                            <input type="radio" name="esl" id="esl-yes" value="Yes">
-                            <label for="esl-yes">Yes</label>
-                            <input type="radio" name="esl" id="esl-no" value="No">
-                            <label for="esl-no">No</label>
-                            <input type="radio" name="esl" id="esl-na" value="Prefer not to say">
-                            <label for="esl-na">Prefer not to say</label>
-                        </div>
+        <!-- Form -->
+        <form id="feedback-form">
+            
+            <!-- Step 1: About Your Exam -->
+            <div class="card">
+                <div class="step-label">Step 1 of 2</div>
+                <h2>About Your Exam</h2>
+                <p class="description">Which exam did you sit?</p>
+                
+                <div class="field">
+                    <label>Licence <span class="req">*</span></label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="licence" value="PPL" required> <span>PPL</span></label>
+                        <label><input type="radio" name="licence" value="CPL"> <span>CPL</span></label>
+                        <label><input type="radio" name="licence" value="ATPL"> <span>ATPL</span></label>
+                        <label><input type="radio" name="licence" value="IR"> <span>IR</span></label>
                     </div>
                 </div>
-
-                <div class="nav">
-                    <button class="btn-next" onclick="goTo(2)">Continue &rarr;</button>
+                
+                <div class="field">
+                    <label>Subject <span class="req">*</span></label>
+                    <select name="subject" required>
+                        <option value="">Select subject...</option>
+                        <option value="Aircraft Technical Knowledge">Aircraft Technical Knowledge</option>
+                        <option value="Flight Rules & Air Law">Flight Rules & Air Law</option>
+                        <option value="Meteorology">Meteorology</option>
+                        <option value="Navigation">Navigation</option>
+                        <option value="Human Factors">Human Factors</option>
+                        <option value="Operations & Performance">Operations & Performance</option>
+                        <option value="Flight Radiotelephony">Flight Radiotelephony</option>
+                    </select>
                 </div>
-            </div>
-
-            <!-- STEP 2: Question Language Reports -->
-            <div class="step" id="step-2">
-                <div class="card">
-                    <div class="step-label">Step 2 — Exam Language</div>
-                    <div class="step-title">Tell Us About Specific Questions</div>
-                    <p class="step-desc">Report any questions where the language, phrasing, or terminology was different from what you learned in the course. Include questions you got right as well — if the wording was confusing, we want to know.</p>
-
-                    <div class="compliance-note">
-                        <strong>Note:</strong> We're not asking you to reproduce exam questions word-for-word. We want to understand the <strong>terminology and phrasing style</strong> used in the exam so we can better prepare future students. Focus on describing the topic and any specific words or phrases that stood out.
-                    </div>
-
-                    <div class="info-box teal">
-                        <span class="icon">🎙️</span>
-                        <span>Tip: Tap the microphone icon on your keyboard to dictate instead of typing — it's much faster on your phone.</span>
-                    </div>
-                </div>
-
-                <div id="questions-container">
-                    <!-- Questions added dynamically -->
-                </div>
-
-                <button class="add-btn" onclick="addQuestion()">+ Add Another Question</button>
-
-                <div class="nav" style="margin-top:20px">
-                    <button class="btn-back" onclick="goTo(1)">&larr; Back</button>
-                    <button class="btn-next" onclick="goTo(3)">Continue &rarr;</button>
-                </div>
-            </div>
-
-            <!-- STEP 3: Final Thoughts -->
-            <div class="step" id="step-3">
-                <div class="card">
-                    <div class="step-label">Step 3 — Final Thoughts</div>
-                    <div class="step-title">Anything Else?</div>
-                    <p class="step-desc">Any general patterns you noticed — unusual phrasing, topics that surprised you, or areas where the exam felt different from the course.</p>
-
-                    <div class="field">
-                        <label>General comments about the exam language or style</label>
-                        <textarea id="general-comments" placeholder="e.g. Several questions used double negatives which made them hard to parse. The meteorology section used terms I hadn't seen before..."></textarea>
-                    </div>
-
-                    <div class="field">
-                        <label>Topics NOT covered in your Stoneybrook course but appeared in the exam</label>
-                        <textarea id="missing-topics" placeholder="e.g. There were questions about a specific procedure that wasn't in the course materials..." style="min-height:80px"></textarea>
-                    </div>
-
-                    <div class="field">
-                        <label>Any specific words or phrases used across multiple questions that you didn't recognise?</label>
-                        <textarea id="unfamiliar-vocab" placeholder="e.g. 'replenish' instead of 'fill up', 'serviceability' instead of 'working condition'..." style="min-height:80px"></textarea>
-                    </div>
-
-                    <div class="field">
-                        <label>How confident did you feel going into the exam?</label>
-                        <div class="rating-wrap">
-                            <input type="radio" name="confidence" id="c1" value="1"><label for="c1">1</label>
-                            <input type="radio" name="confidence" id="c2" value="2"><label for="c2">2</label>
-                            <input type="radio" name="confidence" id="c3" value="3"><label for="c3">3</label>
-                            <input type="radio" name="confidence" id="c4" value="4"><label for="c4">4</label>
-                            <input type="radio" name="confidence" id="c5" value="5"><label for="c5">5</label>
-                        </div>
-                        <div class="rating-ends"><span>Not at all</span><span>Very Confident</span></div>
-                    </div>
-
-                    <div class="field">
-                        <label>Result</label>
-                        <div class="pill-group">
-                            <input type="radio" name="result" id="r-pass" value="Pass"><label for="r-pass">Pass</label>
-                            <input type="radio" name="result" id="r-fail" value="Fail"><label for="r-fail">Fail</label>
-                            <input type="radio" name="result" id="r-waiting" value="Waiting"><label for="r-waiting">Waiting for result</label>
-                            <input type="radio" name="result" id="r-na" value="Prefer not to say"><label for="r-na">Prefer not to say</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="nav">
-                    <button class="btn-back" onclick="goTo(2)">&larr; Back</button>
-                    <button class="btn-submit" onclick="submitForm()">Submit Feedback &rarr;</button>
-                </div>
-            </div>
-
-            <!-- SUCCESS -->
-            <div class="step" id="step-4">
-                <div class="card success-screen">
-                    <div class="success-icon">&#10003;</div>
-                    <h2>Thank you!</h2>
-                    <p>Your anonymous feedback has been submitted. This helps us align our course language with pilot exams for future students.</p>
-                    <div class="success-buttons">
-                        <button class="new-btn" onclick="startNew()">Submit Another Exam &rarr;</button>
-                        <a class="kdr-btn" href="https://stoneybrooktraining-blip.github.io/kdr-refresher/" target="_blank">Got your KDR? Use our Refresher Tool &rarr;</a>
+                
+                <div class="field">
+                    <label>Result <span class="req">*</span></label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="result" value="Pass" required> <span>Pass</span></label>
+                        <label><input type="radio" name="result" value="Fail"> <span>Fail</span></label>
+                        <label><input type="radio" name="result" value="Waiting"> <span>Waiting</span></label>
                     </div>
                 </div>
             </div>
-
-            <!-- Footer -->
-            <div class="footer">
-                &copy; 2026 <a href="https://www.stoneybrook.training" target="_blank">Stoneybrook Training</a> — Online Pilot Theory &amp; Aviation Industry Courses
+            
+            <!-- Step 2: Question Feedback -->
+            <div class="card">
+                <div class="step-label">Step 2 of 2</div>
+                <h2>Question Feedback</h2>
+                
+                <div class="compliance-note">
+                    <strong>ASPEQ Compliance:</strong> Don't reproduce exam questions word-for-word. Describe the <strong>topic</strong> and any <strong>unfamiliar phrasing</strong> instead.
+                </div>
+                
+                <div class="field">
+                    <label>Which questions confused you? <span class="req">*</span></label>
+                    <p class="hint">Describe up to 3 questions. For each: What was the topic? What words or phrasing was unfamiliar? Did you get it right?</p>
+                    <textarea name="questions" placeholder="1. Topic: Weather patterns. Unfamiliar: 'replenish' instead of 'fill up'. Got it wrong.&#10;&#10;2. Topic: Navigation calculations. Unfamiliar: 'serviceability check'. Got it right but wording was tricky." required></textarea>
+                </div>
+                
+                <div class="field">
+                    <label>Any other feedback? <span class="opt">(optional)</span></label>
+                    <p class="hint">Topics not covered in the course, general comments about exam style, words you didn't recognise...</p>
+                    <textarea name="other" placeholder="The meteorology section used terms I hadn't seen before. Several questions had double negatives which made them confusing..."></textarea>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">Submit Feedback</button>
+        </form>
+        
+        <!-- Success Message -->
+        <div id="success" class="card hidden">
+            <div class="success">
+                <h2>Thank you!</h2>
+                <p>Your feedback helps us improve our courses for future students.</p>
+                <p style="margin-top: 20px;">
+                    <a href="https://stoneybrooktraining-blip.github.io/kdr-refresher/">← Back to KDR Refresher</a>
+                </p>
             </div>
         </div>
     </div>
-
-<script>
-let currentStep = 1;
-let questionCount = 0;
-const TOTAL_STEPS = 3;
-
-// Replace with your actual Google Apps Script webhook URL
-const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyzdqg6tFZCCCVCA_QnMsb0uELi2msXh5JfpEt68vYzOxadWYAPn9anXG9JFBTalSrc/exec';
-
-const SUBJECT_MAP = {
-    PPL: [
-        'PPL Air Law',
-        'PPL Meteorology',
-        'PPL Navigation',
-        'PPL Human Factors',
-        'PPL Aircraft Technical Knowledge (Aeroplane)',
-        'PPL Aircraft Technical Knowledge (Helicopter)',
-        'PPL Flight Radiotelephony'
-    ],
-    CPL: [
-        'CPL Air Law (Aeroplane)',
-        'CPL Air Law (Helicopter)',
-        'CPL Meteorology',
-        'CPL Navigation',
-        'CPL Human Factors',
-        'CPL Principles of Flight (Aeroplane)',
-        'CPL Principles of Flight & Aircraft Performance (Helicopter)',
-        'CPL Aircraft Technical Knowledge (Aeroplane)',
-        'CPL General Aircraft Technical Knowledge (Helicopter)'
-    ],
-    ATPL: [
-        'ATPL Air Law',
-        'ATPL Meteorology',
-        'ATPL Human Factors',
-        'ATPL Advanced Aerodynamics, Performance & Systems Knowledge',
-        'ATPL Instruments & Navigation Aids',
-        'ATPL Flight Navigation',
-        'ATPL Flight Planning'
-    ],
-    Ratings: [
-        'IFR Air Law',
-        'IFR Flight Navigation',
-        'IFR Instruments & Navigation Aids',
-        'IR Operational Knowledge (PPL holders)',
-        'Basic Turbine Knowledge (Aeroplane)',
-        'Basic Turbine Knowledge (Helicopter)',
-        'Performance Based Navigation (PBN)',
-        'NDB/ADF Knowledge'
-    ]
-};
-
-// Topic areas per subject for the dropdown in question reports
-const TOPIC_MAP = {
-    'PPL Aircraft Technical Knowledge (Aeroplane)': [
-        'Piston engines — general principles',
-        'Piston engines — fuel systems',
-        'Piston engines — oil systems',
-        'Piston engines — cooling',
-        'Piston engines — ignition',
-        'Piston engines — carburettor & mixture',
-        'Piston engines — propellers',
-        'Airframe — structure & materials',
-        'Airframe — flight controls',
-        'Airframe — flaps & high-lift devices',
-        'Airframe — landing gear & brakes',
-        'Electrical systems',
-        'Vacuum / pressure systems',
-        'Pitot-static instruments',
-        'Gyroscopic instruments',
-        'Magnetic compass',
-        'Engine instruments',
-        'Weight & balance',
-        'Performance — take-off & landing',
-        'Performance — climb & cruise',
-        'Aerodynamics — lift & drag',
-        'Aerodynamics — stalling',
-        'Aerodynamics — stability',
-        'Other / not listed'
-    ],
-    'PPL Human Factors': [
-        'Hypoxia',
-        'Hyperventilation',
-        'Entrapped gases / barotrauma',
-        'Decompression sickness',
-        'Vision & visual illusions',
-        'Hearing & balance',
-        'Spatial disorientation',
-        'Motion sickness',
-        'Fitness to fly / IMSAFE',
-        'Alcohol & drugs',
-        'Stress & fatigue',
-        'Sleep & circadian rhythm',
-        'Decision making (DECIDE / SADIE)',
-        'Situational awareness',
-        'Threat & error management',
-        'Communication & CRM',
-        'Other / not listed'
-    ],
-    'PPL Flight Radiotelephony': [
-        'Radio principles & equipment',
-        'Standard phraseology',
-        'Phonetic alphabet & numbers',
-        'Frequency selection',
-        'Controlled aerodrome procedures',
-        'Unattended aerodrome procedures',
-        'AFIS procedures',
-        'MBZ / CFZ procedures',
-        'Position reporting',
-        'ATIS / AWIB',
-        'Transponder use & codes',
-        'Emergency procedures (MAYDAY/PAN)',
-        'Communications failure',
-        'VFR flight plans & SARTIME',
-        'Other / not listed'
-    ],
-    'PPL Air Law': [
-        'Rules of the air',
-        'Airspace classification',
-        'VFR minima & requirements',
-        'Right of way rules',
-        'Flight plans & notifications',
-        'Pilot licensing requirements',
-        'Aircraft documentation',
-        'Aerodromes & circuits',
-        'Other / not listed'
-    ],
-    'PPL Meteorology': [
-        'Atmosphere & pressure',
-        'Wind & pressure systems',
-        'Cloud types & formation',
-        'Visibility & fog',
-        'Fronts & air masses',
-        'Turbulence & wind shear',
-        'Icing',
-        'Thunderstorms',
-        'Weather reports (METAR/TAF)',
-        'Weather charts',
-        'NZ regional weather',
-        'Other / not listed'
-    ],
-    'PPL Navigation': [
-        'Charts & map reading',
-        'Track & heading calculations',
-        'Wind triangle / navigation computer',
-        'Time & distance calculations',
-        'Position fixing',
-        'Diversions',
-        'Flight planning',
-        'Other / not listed'
-    ]
-};
-
-function updateSubjects() {
-    const cat = document.querySelector('input[name="category"]:checked')?.value;
-    const field = document.getElementById('subject-field');
-    const sel = document.getElementById('subject-select');
-    if (!cat) { field.style.display = 'none'; return; }
-    field.style.display = 'block';
-    sel.innerHTML = '<option value="">— Select subject —</option>';
-    SUBJECT_MAP[cat].forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s;
-        opt.textContent = s;
-        sel.appendChild(opt);
-    });
-}
-
-function getTopicOptions() {
-    const subject = document.getElementById('subject-select').value;
-    if (TOPIC_MAP[subject]) {
-        return TOPIC_MAP[subject].map(t =>
-            `<option value="${t}">${t}</option>`
-        ).join('');
-    }
-    // Fallback: free text only
-    return '';
-}
-
-window.onload = () => addQuestion();
-
-function goTo(step) {
-    if (step > currentStep && !validateStep(currentStep)) return;
-    document.getElementById(`step-${currentStep}`).classList.remove('active');
-    currentStep = step;
-    document.getElementById(`step-${currentStep}`).classList.add('active');
-    updateProgress();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function updateProgress() {
-    const pct = Math.round((Math.min(currentStep, TOTAL_STEPS) / TOTAL_STEPS) * 100);
-    document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('progress-label').textContent = `Step ${Math.min(currentStep, TOTAL_STEPS)} of ${TOTAL_STEPS}`;
-    document.getElementById('progress-pct').textContent = pct + '%';
-}
-
-function validateStep(step) {
-    if (step === 1) {
-        if (!document.querySelector('input[name="category"]:checked')) {
-            alert('Please select a licence category.');
-            return false;
-        }
-        if (!document.getElementById('subject-select').value) {
-            alert('Please select the exam subject.');
-            return false;
-        }
-        if (!document.querySelector('input[name="difficulty"]:checked')) {
-            alert('Please rate the exam difficulty.');
-            return false;
-        }
-    }
-    return true;
-}
-
-function addQuestion() {
-    questionCount++;
-    const container = document.getElementById('questions-container');
-    const block = document.createElement('div');
-    block.className = 'question-block';
-    block.id = `q-block-${questionCount}`;
-    const qNum = questionCount;
-
-    const topicOptions = getTopicOptions();
-    const topicField = topicOptions
-        ? `<select id="q${qNum}-topic-select">
-               <option value="">— Select topic area —</option>
-               ${topicOptions}
-           </select>
-           <input type="text" id="q${qNum}-topic-other" placeholder="Or type a topic if not listed above" style="margin-top:8px">`
-        : `<input type="text" id="q${qNum}-topic-other" placeholder="e.g. VFR weather minima, transponder codes, oil system...">`;
-
-    block.innerHTML = `
-        <div class="q-number">Question ${qNum}</div>
-        ${qNum > 1 ? `<button class="remove-q" onclick="removeQuestion(${qNum})" title="Remove">&times;</button>` : ''}
-
-        <div class="field">
-            <label>Topic area <span class="req">*</span></label>
-            ${topicField}
-        </div>
-
-        <div class="field">
-            <label>What was the question about? <span class="opt">(don't reproduce the exact wording)</span></label>
-            <textarea id="q${qNum}-about" placeholder="e.g. It asked about the correct procedure for checking oil levels before flight..." style="min-height:70px"></textarea>
-        </div>
-
-        <div class="field">
-            <label>Any specific words or phrases used that were different from the course?</label>
-            <textarea id="q${qNum}-phrases" placeholder="e.g. The exam used 'replenish' where the course says 'fill up'. Or 'serviceability' instead of 'working condition'..." style="min-height:70px"></textarea>
-        </div>
-
-        <div class="field">
-            <label>Did you get this question right?</label>
-            <div class="pill-group">
-                <input type="radio" name="q${qNum}-correct" id="q${qNum}-right" value="Yes">
-                <label for="q${qNum}-right">Yes</label>
-                <input type="radio" name="q${qNum}-correct" id="q${qNum}-wrong" value="No">
-                <label for="q${qNum}-wrong">No</label>
-                <input type="radio" name="q${qNum}-correct" id="q${qNum}-unsure" value="Not sure">
-                <label for="q${qNum}-unsure">Not sure</label>
-            </div>
-        </div>
-
-        <div class="field">
-            <label>What made this question difficult?</label>
-            <div class="pill-group" style="margin-bottom:10px">
-                <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why1" value="Unfamiliar wording">
-                <label for="q${qNum}-why1">Unfamiliar wording</label>
-                <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why2" value="Double negative">
-                <label for="q${qNum}-why2">Double negative</label>
-                <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why3" value="Topic not in course">
-                <label for="q${qNum}-why3">Topic not in course</label>
-                <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why4" value="Two answers seemed correct">
-                <label for="q${qNum}-why4">Two answers seemed correct</label>
-                <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why5" value="Ambiguous question">
-                <label for="q${qNum}-why5">Ambiguous</label>
-                <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why6" value="Trick wording">
-                <label for="q${qNum}-why6">Trick wording</label>
-                <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why7" value="English language barrier">
-                <label for="q${qNum}-why7">English language barrier</label>
-                <input type="checkbox" name="q${qNum}-why" id="q${qNum}-why8" value="It wasn't difficult">
-                <label for="q${qNum}-why8">It wasn't difficult</label>
-            </div>
-            <input type="text" id="q${qNum}-other-why" placeholder="Other reason (optional)">
-        </div>
-
-        <div class="field">
-            <label>How well did the course prepare you for this specific topic?</label>
-            <div class="rating-wrap">
-                <input type="radio" name="q${qNum}-prep" id="q${qNum}-p1" value="1"><label for="q${qNum}-p1">1</label>
-                <input type="radio" name="q${qNum}-prep" id="q${qNum}-p2" value="2"><label for="q${qNum}-p2">2</label>
-                <input type="radio" name="q${qNum}-prep" id="q${qNum}-p3" value="3"><label for="q${qNum}-p3">3</label>
-                <input type="radio" name="q${qNum}-prep" id="q${qNum}-p4" value="4"><label for="q${qNum}-p4">4</label>
-                <input type="radio" name="q${qNum}-prep" id="q${qNum}-p5" value="5"><label for="q${qNum}-p5">5</label>
-            </div>
-            <div class="rating-ends"><span>Not at all</span><span>Very well</span></div>
-        </div>
-    `;
-    container.appendChild(block);
-}
-
-function removeQuestion(num) {
-    const block = document.getElementById(`q-block-${num}`);
-    if (block) block.remove();
-}
-
-function collectData() {
-    const data = {
-        version: '2.0',
-        submitted: new Date().toLocaleString('en-NZ'),
-        exam: {
-            category: document.querySelector('input[name="category"]:checked')?.value || '',
-            subject: document.getElementById('subject-select').value || '',
-            difficulty: document.querySelector('input[name="difficulty"]:checked')?.value || '',
-            languageMatch: document.querySelector('input[name="language-match"]:checked')?.value || '',
-            englishFirstLanguage: document.querySelector('input[name="esl"]:checked')?.value || '',
-        },
-        questions: [],
-        summary: {
-            generalComments: document.getElementById('general-comments').value,
-            missingTopics: document.getElementById('missing-topics').value,
-            unfamiliarVocab: document.getElementById('unfamiliar-vocab').value,
-            confidenceBeforeExam: document.querySelector('input[name="confidence"]:checked')?.value || '',
-            result: document.querySelector('input[name="result"]:checked')?.value || '',
-        }
-    };
-
-    document.querySelectorAll('.question-block').forEach((block, i) => {
-        const num = block.id.replace('q-block-', '');
-        const reasons = [];
-        document.querySelectorAll(`input[name="q${num}-why"]:checked`).forEach(cb => reasons.push(cb.value));
-        const otherReason = document.getElementById(`q${num}-other-why`)?.value;
-        if (otherReason) reasons.push(otherReason);
-
-        const topicSelect = document.getElementById(`q${num}-topic-select`);
-        const topicOther = document.getElementById(`q${num}-topic-other`);
-        const topic = (topicSelect?.value || '') + (topicOther?.value ? (topicSelect?.value ? ' — ' : '') + topicOther.value : '');
-
-        data.questions.push({
-            questionNumber: i + 1,
-            topic: topic,
-            about: document.getElementById(`q${num}-about`)?.value || '',
-            unfamiliarPhrases: document.getElementById(`q${num}-phrases`)?.value || '',
-            gotItRight: document.querySelector(`input[name="q${num}-correct"]:checked`)?.value || '',
-            difficultyReasons: reasons,
-            coursePreparation: document.querySelector(`input[name="q${num}-prep"]:checked`)?.value || '',
+    
+    <div class="footer">
+        &copy; 2026 Stoneybrook Training &middot; Anonymous feedback only
+    </div>
+    
+    <script>
+        // Form submission
+        document.getElementById('feedback-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            
+            // TODO: Replace with your webhook URL
+            const WEBHOOK_URL = 'YOUR_WEBHOOK_URL_HERE';
+            
+            try {
+                // For now, just show success (replace with actual webhook call)
+                document.getElementById('feedback-form').classList.add('hidden');
+                document.getElementById('success').classList.remove('hidden');
+                
+                // Actual submission would be:
+                // await fetch(WEBHOOK_URL, {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify(data)
+                // });
+                
+            } catch (error) {
+                alert('Something went wrong. Please try again.');
+            }
         });
-    });
-
-    return data;
-}
-
-function submitForm() {
-    const data = collectData();
-    const submitBtn = document.querySelector('.btn-submit');
-    const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Submitting...';
-    submitBtn.disabled = true;
-
-    fetch(WEBHOOK_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    })
-    .then(() => { goTo(4); })
-    .catch((err) => {
-        alert('There was a problem submitting your feedback. Please try again.');
-        console.error('Submission error:', err);
-        submitBtn.textContent = originalText;
-        submitBtn.disabled = false;
-    });
-}
-
-function startNew() { location.reload(); }
-</script>
-
+    </script>
 </body>
 </html>
