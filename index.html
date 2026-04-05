@@ -324,24 +324,16 @@
                 <div class="field">
                     <label>Licence <span class="req">*</span></label>
                     <div class="radio-group">
-                        <label><input type="radio" name="licence" value="PPL" required> <span>PPL</span></label>
-                        <label><input type="radio" name="licence" value="CPL"> <span>CPL</span></label>
-                        <label><input type="radio" name="licence" value="ATPL"> <span>ATPL</span></label>
-                        <label><input type="radio" name="licence" value="IR"> <span>IR</span></label>
+                        <label><input type="radio" name="licence" value="PPL" required onchange="updateSubjects()"> <span>PPL</span></label>
+                        <label><input type="radio" name="licence" value="CPL" onchange="updateSubjects()"> <span>CPL</span></label>
+                        <label><input type="radio" name="licence" value="IR" onchange="updateSubjects()"> <span>IR</span></label>
                     </div>
                 </div>
                 
                 <div class="field">
                     <label>Subject <span class="req">*</span></label>
-                    <select name="subject" required>
-                        <option value="">Select subject...</option>
-                        <option value="Aircraft Technical Knowledge">Aircraft Technical Knowledge</option>
-                        <option value="Flight Rules & Air Law">Flight Rules & Air Law</option>
-                        <option value="Meteorology">Meteorology</option>
-                        <option value="Navigation">Navigation</option>
-                        <option value="Human Factors">Human Factors</option>
-                        <option value="Operations & Performance">Operations & Performance</option>
-                        <option value="Flight Radiotelephony">Flight Radiotelephony</option>
+                    <select name="subject" id="subject-select" required>
+                        <option value="">Select licence first...</option>
                     </select>
                 </div>
                 
@@ -514,6 +506,48 @@
             document.getElementById('step-3').classList.add('hidden');
             document.querySelector('.progress-bar').classList.add('hidden');
             document.getElementById('success').classList.remove('hidden');
+        }
+        
+        // Subject options by licence
+        const subjectsByLicence = {
+            'PPL': [
+                { value: 'PPL Aircraft Technical Knowledge', label: 'Aircraft Technical Knowledge' },
+                { value: 'PPL Flight Rules & Air Law', label: 'Flight Rules & Air Law' },
+                { value: 'PPL Meteorology', label: 'Meteorology' },
+                { value: 'PPL Navigation', label: 'Navigation' },
+                { value: 'PPL Human Factors', label: 'Human Factors' },
+                { value: 'PPL Flight Radiotelephony', label: 'Flight Radiotelephony' }
+            ],
+            'CPL': [
+                { value: 'CPL Aircraft Technical Knowledge', label: 'Aircraft Technical Knowledge' },
+                { value: 'CPL Flight Rules & Air Law', label: 'Flight Rules & Air Law' },
+                { value: 'CPL Meteorology', label: 'Meteorology' },
+                { value: 'CPL Human Factors', label: 'Human Factors' },
+                { value: 'CPL Principles of Flight', label: 'Principles of Flight' }
+            ],
+            'IR': [
+                { value: 'IFR Aircraft Technical Knowledge', label: 'Aircraft Technical Knowledge' },
+                { value: 'IFR Flight Rules & Air Law', label: 'Flight Rules & Air Law' },
+                { value: 'IFR Meteorology', label: 'Meteorology' },
+                { value: 'IFR Navigation', label: 'Navigation' },
+                { value: 'IFR Human Factors', label: 'Human Factors' }
+            ]
+        };
+        
+        function updateSubjects() {
+            const licence = document.querySelector('input[name="licence"]:checked')?.value;
+            const subjectSelect = document.getElementById('subject-select');
+            
+            subjectSelect.innerHTML = '<option value="">Select subject...</option>';
+            
+            if (licence && subjectsByLicence[licence]) {
+                subjectsByLicence[licence].forEach(subject => {
+                    const option = document.createElement('option');
+                    option.value = subject.value;
+                    option.textContent = subject.label;
+                    subjectSelect.appendChild(option);
+                });
+            }
         }
         
         // Add first question on load
