@@ -298,22 +298,28 @@
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData);
             
-            // TODO: Replace with your webhook URL
-            const WEBHOOK_URL = 'YOUR_WEBHOOK_URL_HERE';
+            // Google Apps Script Webhook URL
+            // NOTE: Update this after deploying the new v3 Apps Script
+            const WEBHOOK_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
             
             try {
-                // For now, just show success (replace with actual webhook call)
-                document.getElementById('feedback-form').classList.add('hidden');
-                document.getElementById('success').classList.remove('hidden');
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
                 
-                // Actual submission would be:
-                // await fetch(WEBHOOK_URL, {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify(data)
-                // });
+                const result = await response.json();
+                
+                if (result.status === 'ok') {
+                    document.getElementById('feedback-form').classList.add('hidden');
+                    document.getElementById('success').classList.remove('hidden');
+                } else {
+                    throw new Error(result.message);
+                }
                 
             } catch (error) {
+                console.error('Submission error:', error);
                 alert('Something went wrong. Please try again.');
             }
         });
