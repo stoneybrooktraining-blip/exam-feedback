@@ -508,36 +508,29 @@
             document.getElementById('success').classList.remove('hidden');
         }
         
-        // Subject options by licence (matched to AC 61 and KDR data)
+        // Subject options by licence (from CASA Part 61 MOS)
         const subjectsByLicence = {
             'PPL': [
-                { value: 'PPL Aircraft Technical Knowledge (Aeroplane)', label: 'Aircraft Technical Knowledge (Aeroplane)' },
-                { value: 'PPL Aircraft Technical Knowledge (Helicopter)', label: 'Aircraft Technical Knowledge (Helicopter)' },
-                { value: 'PPL Flight Rules and Air Law', label: 'Flight Rules and Air Law' },
+                { value: 'PPL Aircraft Technical Knowledge', label: 'Aircraft Technical Knowledge' },
+                { value: 'PPL Air Law', label: 'Air Law' },
                 { value: 'PPL Meteorology', label: 'Meteorology' },
-                { value: 'PPL Navigation (Aeroplane)', label: 'Navigation (Aeroplane)' },
-                { value: 'PPL Navigation (Helicopter)', label: 'Navigation (Helicopter)' },
+                { value: 'PPL Navigation', label: 'Navigation' },
                 { value: 'PPL Human Factors', label: 'Human Factors' },
-                { value: 'PPL Flight Radiotelephony', label: 'Flight Radiotelephony' },
-                { value: 'PPL Operations, Performance and Flight Planning (Aeroplane)', label: 'Operations, Performance and Flight Planning (Aeroplane)' },
-                { value: 'PPL Operations, Performance and Flight Planning (Helicopter)', label: 'Operations, Performance and Flight Planning (Helicopter)' }
+                { value: 'PPL Operations, Performance and Planning', label: 'Operations, Performance and Planning' },
+                { value: 'PPL Flight Radiotelephony', label: 'Flight Radiotelephony' }
             ],
             'CPL': [
-                { value: 'CPL Aircraft Technical Knowledge (Aeroplane)', label: 'Aircraft Technical Knowledge (Aeroplane)' },
-                { value: 'CPL Aircraft Technical Knowledge (Helicopter)', label: 'Aircraft Technical Knowledge (Helicopter)' },
-                { value: 'CPL Flight Rules and Air Law', label: 'Flight Rules and Air Law' },
+                { value: 'CPL Aircraft Technical Knowledge', label: 'Aircraft Technical Knowledge' },
+                { value: 'CPL Air Law', label: 'Air Law' },
                 { value: 'CPL Meteorology', label: 'Meteorology' },
-                { value: 'CPL Navigation (Aeroplane)', label: 'Navigation (Aeroplane)' },
-                { value: 'CPL Navigation (Helicopter)', label: 'Navigation (Helicopter)' },
+                { value: 'CPL Navigation', label: 'Navigation' },
                 { value: 'CPL Human Factors', label: 'Human Factors' },
-                { value: 'CPL Principles of Flight (Aeroplane)', label: 'Principles of Flight (Aeroplane)' },
-                { value: 'CPL Flight Radiotelephony', label: 'Flight Radiotelephony' },
-                { value: 'CPL Operations, Performance and Flight Planning (Aeroplane)', label: 'Operations, Performance and Flight Planning (Aeroplane)' },
-                { value: 'CPL Operations, Performance and Flight Planning (Helicopter)', label: 'Operations, Performance and Flight Planning (Helicopter)' }
+                { value: 'CPL Operations, Performance and Planning', label: 'Operations, Performance and Planning' },
+                { value: 'CPL Flight Radiotelephony', label: 'Flight Radiotelephony' }
             ],
             'IR': [
                 { value: 'IR Aircraft Technical Knowledge', label: 'Aircraft Technical Knowledge' },
-                { value: 'IR Flight Rules and Air Law', label: 'Flight Rules and Air Law' },
+                { value: 'IR Air Law', label: 'Air Law' },
                 { value: 'IR Meteorology', label: 'Meteorology' },
                 { value: 'IR Navigation', label: 'Navigation' },
                 { value: 'IR Human Factors', label: 'Human Factors' },
