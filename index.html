@@ -16,6 +16,7 @@
             --text: #1F2528;
             --muted: #6B7280;
             --border: #e2e8f0;
+            --light-bg: #f8fafc;
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -54,6 +55,20 @@
             max-width: 640px;
             margin: 0 auto;
             padding: 32px 24px 64px;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 24px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--teal);
+            border-radius: 2px;
+            transition: width 0.3s;
         }
         
         .card {
@@ -103,7 +118,7 @@
             border-radius: 8px;
             font-size: 15px;
             font-family: inherit;
-            background: #f8fafc;
+            background: var(--light-bg);
         }
         
         select:focus, input:focus, textarea:focus {
@@ -113,7 +128,7 @@
         }
         
         textarea {
-            min-height: 120px;
+            min-height: 100px;
             resize: vertical;
         }
         
@@ -128,7 +143,7 @@
             align-items: center;
             gap: 6px;
             padding: 10px 16px;
-            background: #f8fafc;
+            background: var(--light-bg);
             border: 1px solid var(--border);
             border-radius: 8px;
             cursor: pointer;
@@ -151,6 +166,22 @@
             margin-top: 6px;
         }
         
+        .mic-tip {
+            background: rgba(19,157,163,0.08);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .mic-tip::before {
+            content: "🎙️";
+            font-size: 16px;
+        }
+        
         .compliance-note {
             background: rgba(19,157,163,0.08);
             border-left: 3px solid var(--teal);
@@ -158,6 +189,50 @@
             border-radius: 0 8px 8px 0;
             font-size: 13px;
             margin-bottom: 20px;
+        }
+        
+        .question-block {
+            background: var(--light-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .question-number {
+            font-weight: 600;
+            color: var(--teal);
+        }
+        
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .add-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--white);
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            color: var(--teal);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .add-btn:hover {
+            border-color: var(--teal);
+            background: rgba(19,157,163,0.05);
         }
         
         .btn {
@@ -176,6 +251,32 @@
         
         .btn:hover { background: var(--teal-dark); }
         
+        .nav { display: flex; gap: 12px; margin-top: 24px; }
+        
+        .btn-back {
+            flex: 1;
+            padding: 14px 24px;
+            background: var(--white);
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .btn-next {
+            flex: 2;
+            padding: 14px 24px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
         .success {
             text-align: center;
             padding: 40px 20px;
@@ -190,6 +291,9 @@
         
         .hidden { display: none; }
         
+        .step { display: none; }
+        .step.active { display: block; }
+        
         .footer {
             text-align: center;
             padding: 24px;
@@ -202,16 +306,18 @@
     <div class="header">
         <div class="logo"><span class="stone">STONEY</span><span class="brook">BROOK</span></div>
         <h1>Exam Feedback</h1>
-        <p class="subtitle">Help us improve our courses — 2 minutes, anonymous</p>
+        <p class="subtitle">Help us improve our courses — anonymous, 3 minutes</p>
     </div>
     
     <div class="container">
-        <!-- Form -->
-        <form id="feedback-form">
-            
-            <!-- Step 1: About Your Exam -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress" style="width: 33%"></div>
+        </div>
+        
+        <!-- Step 1: About Your Exam -->
+        <div class="step active" id="step-1">
             <div class="card">
-                <div class="step-label">Step 1 of 2</div>
+                <div class="step-label">Step 1 of 3</div>
                 <h2>About Your Exam</h2>
                 <p class="description">Which exam did you sit?</p>
                 
@@ -249,32 +355,59 @@
                 </div>
             </div>
             
-            <!-- Step 2: Question Feedback -->
+            <button class="btn" onclick="goToStep(2)">Continue →</button>
+        </div>
+        
+        <!-- Step 2: Question Feedback -->
+        <div class="step" id="step-2">
             <div class="card">
-                <div class="step-label">Step 2 of 2</div>
+                <div class="step-label">Step 2 of 3</div>
                 <h2>Question Feedback</h2>
                 
                 <div class="compliance-note">
                     <strong>ASPEQ Compliance:</strong> Don't reproduce exam questions word-for-word. Describe the <strong>topic</strong> and any <strong>unfamiliar phrasing</strong> instead.
                 </div>
                 
-                <div class="field">
-                    <label>Which questions confused you? <span class="req">*</span></label>
-                    <p class="hint">Describe up to 3 questions. For each: What was the topic? What words or phrasing was unfamiliar? Did you get it right?</p>
-                    <textarea name="questions" placeholder="1. Topic: Weather patterns. Unfamiliar: 'replenish' instead of 'fill up'. Got it wrong.&#10;&#10;2. Topic: Navigation calculations. Unfamiliar: 'serviceability check'. Got it right but wording was tricky." required></textarea>
+                <div class="mic-tip">
+                    <strong>Tip:</strong> Tap the microphone icon on your keyboard to dictate instead of typing — it's much faster on your phone.
                 </div>
                 
+                <div id="questions-container">
+                    <!-- Questions added here -->
+                </div>
+                
+                <button type="button" class="add-btn" onclick="addQuestion()">+ Add Another Question</button>
+                
+                <p class="hint" style="text-align: center; margin-top: 12px;">Add as many questions as you need</p>
+            </div>
+            
+            <div class="nav">
+                <button type="button" class="btn-back" onclick="goToStep(1)">← Back</button>
+                <button type="button" class="btn-next" onclick="goToStep(3)">Continue →</button>
+            </div>
+        </div>
+        
+        <!-- Step 3: Final Thoughts -->
+        <div class="step" id="step-3">
+            <div class="card">
+                <div class="step-label">Step 3 of 3</div>
+                <h2>Anything Else?</h2>
+                <p class="description">Optional — general feedback about the exam</p>
+                
                 <div class="field">
-                    <label>Any other feedback? <span class="opt">(optional)</span></label>
-                    <p class="hint">Topics not covered in the course, general comments about exam style, words you didn't recognise...</p>
-                    <textarea name="other" placeholder="The meteorology section used terms I hadn't seen before. Several questions had double negatives which made them confusing..."></textarea>
+                    <label>General comments</label>
+                    <p class="hint">Topics not in the course, patterns you noticed, or suggestions for improvement</p>
+                    <textarea name="other" placeholder="The meteorology section used terms I hadn't seen before. Several questions had double negatives..."></textarea>
                 </div>
             </div>
             
-            <button type="submit" class="btn">Submit Feedback</button>
-        </form>
+            <div class="nav">
+                <button type="button" class="btn-back" onclick="goToStep(2)">← Back</button>
+                <button type="button" class="btn-next" onclick="submitForm()">Submit Feedback</button>
+            </div>
+        </div>
         
-        <!-- Success Message -->
+        <!-- Success -->
         <div id="success" class="card hidden">
             <div class="success">
                 <h2>Thank you!</h2>
@@ -287,42 +420,105 @@
     </div>
     
     <div class="footer">
-        &copy; 2026 Stoneybrook Training &middot; Anonymous feedback only
+        &copy; 2026 Stoneybrook Training · Anonymous feedback only
     </div>
     
     <script>
-        // Form submission
-        document.getElementById('feedback-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        let currentStep = 1;
+        let questionCount = 0;
+        const MAX_QUESTIONS = 50;
+        
+        function goToStep(step) {
+            // Validate current step
+            if (step > currentStep && !validateStep(currentStep)) return;
             
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData);
+            // Hide current step
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
             
-            // Google Apps Script Webhook URL
-            // NOTE: Update this after deploying the new v3 Apps Script
-            const WEBHOOK_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+            // Show new step
+            currentStep = step;
+            document.getElementById(`step-${currentStep}`).classList.add('active');
             
-            try {
-                const response = await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                
-                if (result.status === 'ok') {
-                    document.getElementById('feedback-form').classList.add('hidden');
-                    document.getElementById('success').classList.remove('hidden');
-                } else {
-                    throw new Error(result.message);
+            // Update progress
+            const progress = (step / 3) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+        
+        function validateStep(step) {
+            const currentStepEl = document.getElementById(`step-${step}`);
+            const required = currentStepEl.querySelectorAll('[required]');
+            
+            for (let field of required) {
+                if (!field.value) {
+                    field.focus();
+                    return false;
                 }
-                
-            } catch (error) {
-                console.error('Submission error:', error);
-                alert('Something went wrong. Please try again.');
             }
-        });
+            return true;
+        }
+        
+        function addQuestion() {
+            if (questionCount >= MAX_QUESTIONS) {
+                alert('Maximum 50 questions allowed');
+                return;
+            }
+            
+            questionCount++;
+            const container = document.getElementById('questions-container');
+            
+            const questionBlock = document.createElement('div');
+            questionBlock.className = 'question-block';
+            questionBlock.id = `question-${questionCount}`;
+            
+            questionBlock.innerHTML = `
+                <div class="question-header">
+                    <span class="question-number">Question ${questionCount}</span>
+                    ${questionCount > 1 ? `<button type="button" class="remove-btn" onclick="removeQuestion(${questionCount})">Remove</button>` : ''}
+                </div>
+                <div class="field">
+                    <label>What was the topic? <span class="req">*</span></label>
+                    <input type="text" name="q${questionCount}-topic" placeholder="e.g., Weather patterns, Navigation calculations" required>
+                </div>
+                <div class="field">
+                    <label>What specific words or phrasing was unfamiliar?</label>
+                    <input type="text" name="q${questionCount}-phrasing" placeholder="e.g., 'replenish' instead of 'fill up'">
+                </div>
+                <div class="field">
+                    <label>Did you get it right?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="q${questionCount}-correct" value="Yes"> <span>Yes</span></label>
+                        <label><input type="radio" name="q${questionCount}-correct" value="No"> <span>No</span></label>
+                        <label><input type="radio" name="q${questionCount}-correct" value="Not sure"> <span>Not sure</span></label>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(questionBlock);
+        }
+        
+        function removeQuestion(id) {
+            const block = document.getElementById(`question-${id}`);
+            block.remove();
+            questionCount--;
+            
+            // Renumber remaining questions
+            const blocks = document.querySelectorAll('.question-block');
+            blocks.forEach((block, index) => {
+                const num = index + 1;
+                block.id = `question-${num}`;
+                block.querySelector('.question-number').textContent = `Question ${num}`;
+            });
+        }
+        
+        function submitForm() {
+            // TODO: Add webhook submission
+            document.getElementById('step-3').classList.add('hidden');
+            document.querySelector('.progress-bar').classList.add('hidden');
+            document.getElementById('success').classList.remove('hidden');
+        }
+        
+        // Add first question on load
+        window.onload = () => addQuestion();
     </script>
 </body>
 </html>
