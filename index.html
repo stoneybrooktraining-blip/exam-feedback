@@ -508,45 +508,37 @@
             document.getElementById('success').classList.remove('hidden');
         }
         
-        // Subject options by licence (from NZ CAA AC 61 documents)
+        // Subject options by licence (matched to KDR Refresher data files)
         const subjectsByLicence = {
             'PPL': [
+                { value: 'PPL Aircraft Technical Knowledge', label: 'Aircraft Technical Knowledge' },
+                { value: 'PPL Aircraft Technical Knowledge (Helicopter)', label: 'Aircraft Technical Knowledge (Helicopter)' },
                 { value: 'PPL Flight Radiotelephony', label: 'Flight Radiotelephony' },
-                { value: 'PPL Air Law', label: 'Air Law' },
-                { value: 'PPL Air Navigation and Flight Planning', label: 'Air Navigation and Flight Planning' },
-                { value: 'PPL Meteorology', label: 'Meteorology' },
                 { value: 'PPL Human Factors', label: 'Human Factors' },
-                { value: 'PPL Aircraft Technical Knowledge (Aeroplane)', label: 'Aircraft Technical Knowledge (Aeroplane)' },
-                { value: 'PPL Aircraft Technical Knowledge (Helicopter)', label: 'Aircraft Technical Knowledge (Helicopter)' }
+                { value: 'PPL Air Law', label: 'Air Law' },
+                { value: 'PPL Meteorology', label: 'Meteorology' },
+                { value: 'PPL Navigation', label: 'Navigation' }
             ],
             'CPL': [
+                { value: 'CPL Aircraft Technical Knowledge', label: 'Aircraft Technical Knowledge' },
+                { value: 'CPL Aircraft Technical Knowledge (Helicopter)', label: 'Aircraft Technical Knowledge (Helicopter)' },
+                { value: 'CPL Human Factors', label: 'Human Factors' },
                 { value: 'CPL Air Law', label: 'Air Law' },
-                { value: 'CPL Flight Navigation General', label: 'Flight Navigation General' },
                 { value: 'CPL Meteorology', label: 'Meteorology' },
-                { value: 'CPL Principles of Flight and Aircraft Performance (A)', label: 'Principles of Flight and Aircraft Performance (A)' },
-                { value: 'CPL Principles of Flight and Aircraft Performance (H)', label: 'Principles of Flight and Aircraft Performance (H)' },
-                { value: 'CPL General Aircraft Technical Knowledge (Aeroplane)', label: 'General Aircraft Technical Knowledge (Aeroplane)' },
-                { value: 'CPL General Aircraft Technical Knowledge (Helicopter)', label: 'General Aircraft Technical Knowledge (Helicopter)' },
-                { value: 'CPL Human Factors', label: 'Human Factors' }
+                { value: 'CPL Principles of Flight (Aeroplane)', label: 'Principles of Flight (Aeroplane)' }
             ],
             'ATPL': [
                 { value: 'ATPL Air Law', label: 'Air Law' },
-                { value: 'ATPL Flight Navigation General', label: 'Flight Navigation General' },
-                { value: 'ATPL Flight Planning (Aeroplane)', label: 'Flight Planning (Aeroplane)' },
-                { value: 'ATPL Flight Planning (Helicopter)', label: 'Flight Planning (Helicopter)' },
+                { value: 'ATPL Flight Navigation', label: 'Flight Navigation' },
                 { value: 'ATPL Meteorology', label: 'Meteorology' },
                 { value: 'ATPL Instruments and Navigation Aids', label: 'Instruments and Navigation Aids' },
-                { value: 'ATPL Advanced Aerodynamics, Performance and Systems Knowledge (A)', label: 'Advanced Aerodynamics, Performance and Systems Knowledge (A)' },
-                { value: 'ATPL Aerodynamics and Aircraft Systems (Helicopter)', label: 'Aerodynamics and Aircraft Systems (Helicopter)' },
-                { value: 'ATPL Performance and Loading (Helicopter)', label: 'Performance and Loading (Helicopter)' },
+                { value: 'ATPL Advanced Aerodynamics, Performance and Systems', label: 'Advanced Aerodynamics, Performance and Systems' },
                 { value: 'ATPL Human Factors', label: 'Human Factors' }
             ],
             'IR': [
                 { value: 'IR Air Law', label: 'Air Law' },
                 { value: 'IR Flight Navigation', label: 'Flight Navigation' },
-                { value: 'IR Meteorology', label: 'Meteorology' },
-                { value: 'IR Instruments and Navigation Aids', label: 'Instruments and Navigation Aids' },
-                { value: 'IR Human Factors', label: 'Human Factors' }
+                { value: 'IR Instruments and Navigation Aids', label: 'Instruments and Navigation Aids' }
             ]
         };
         
