@@ -469,12 +469,13 @@
                     ${questionCount > 1 ? `<button type="button" class="remove-btn" onclick="removeQuestion(${questionCount})">Remove</button>` : ''}
                 </div>
                 <div class="field">
-                    <label>What was the topic? <span class="req">*</span></label>
-                    <input type="text" name="q${questionCount}-topic" placeholder="e.g., Weather patterns, Navigation calculations" required>
+                    <label>What topic area was this question about? <span class="req">*</span></label>
+                    <input type="text" name="q${questionCount}-topic" placeholder="e.g., Weather patterns, Navigation calculations, Circuit procedures" required>
                 </div>
                 <div class="field">
-                    <label>What specific words or phrasing was unfamiliar?</label>
-                    <input type="text" name="q${questionCount}-phrasing" placeholder="e.g., 'replenish' instead of 'fill up'">
+                    <label>How was this topic presented in the exam? <span class="req">*</span></label>
+                    <p class="hint">Describe the wording, terminology, or phrasing used. This helps us understand how ASPEQ structures questions.</p>
+                    <textarea name="q${questionCount}-phrasing" placeholder="e.g., They used 'replenish' instead of 'fill up', asked about 'serviceability requirements' rather than 'maintenance checks', used formal terminology like 'atmospheric lapse rate' instead of simpler language..." style="min-height: 100px;" required></textarea>
                 </div>
                 <div class="field">
                     <label>Did you get it right?</label>
