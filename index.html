@@ -314,7 +314,7 @@
             <div class="progress-fill" id="progress" style="width: 33%"></div>
         </div>
         
-        <form id="feedback-form">
+        <form id="feedback-form" method="POST" action="https://script.google.com/macros/s/AKfycbyKcmiOvbxdPHPdbvLh7lXHFTsXDO6OMFvxTgRL8wFkde2TJFvAWbGmIJYVHH_wBiE/exec" onsubmit="goToSuccess()">
         
         <!-- Step 1: About Your Exam -->
         <div class="step active" id="step-1">
@@ -398,7 +398,7 @@
             
             <div class="nav">
                 <button type="button" class="btn-back" onclick="goToStep(2)">← Back</button>
-                <button type="button" class="btn-next" onclick="submitForm()">Submit Feedback</button>
+                <button type="submit" class="btn-next">Submit Feedback</button>
             </div>
         </div>
         
@@ -508,56 +508,10 @@
             });
         }
         
-        async function submitForm() {
-            const form = document.getElementById('feedback-form');
-            const formData = new FormData(form);
-            
-            // Build questions array
-            const questions = [];
-            for (let i = 1; i <= questionCount; i++) {
-                const topic = formData.get(`q${i}-topic`);
-                const phrasing = formData.get(`q${i}-phrasing`);
-                const correct = formData.get(`q${i}-correct`);
-                
-                if (topic || phrasing) {
-                    questions.push({
-                        topic: topic || '',
-                        phrasing: phrasing || '',
-                        correct: correct || ''
-                    });
-                }
-            }
-            
-            const payload = {
-                licence: formData.get('licence'),
-                subject: formData.get('subject'),
-                result: formData.get('result'),
-                questions: questions,
-                other: formData.get('other') || ''
-            };
-            
-            try {
-                const response = await fetch('https://script.google.com/macros/s/AKfycbzRKQm3q0hbLIHoQzV2Rvmp1z0h9rtYDDcT3ybxzLFKhDb5EcB5ooH4YatlW-VRFNbL/exec', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-                
-                const result = await response.json();
-                
-                if (result.status === 'ok') {
-                    document.getElementById('step-3').classList.add('hidden');
-                    document.querySelector('.progress-bar').classList.add('hidden');
-                    document.getElementById('success').classList.remove('hidden');
-                } else {
-                    alert('Something went wrong. Please try again.');
-                }
-            } catch (err) {
-                console.error('Submit error:', err);
-                alert('Could not submit. Please check your connection and try again.');
-            }
+        function goToSuccess() {
+            document.getElementById('step-3').classList.add('hidden');
+            document.querySelector('.progress-bar').classList.add('hidden');
+            document.getElementById('success').classList.remove('hidden');
         }
         
         // Subject options by licence (from AC 61 + Stoneybrook courses)
