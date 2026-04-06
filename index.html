@@ -314,8 +314,7 @@
             <div class="progress-fill" id="progress" style="width: 33%"></div>
         </div>
         
-        <form id="feedback-form" method="POST" action="https://script.google.com/macros/s/AKfycbwzai741zPlnWLROVPwewIQR0LysAwv6RfvdxOy1cOSlpRMOKJ9bCsEPVcMzz1Zzopm/exec" target="hidden-iframe" onsubmit="goToSuccess()">
-        <iframe name="hidden-iframe" style="display:none;"></iframe>
+        <form id="feedback-form" onsubmit="event.preventDefault(); submitToSheet();">
         
         <!-- Step 1: About Your Exam -->
         <div class="step active" id="step-1">
@@ -513,6 +512,69 @@
             document.getElementById('step-3').classList.add('hidden');
             document.querySelector('.progress-bar').classList.add('hidden');
             document.getElementById('success').classList.remove('hidden');
+        }
+        
+        function submitToSheet() {
+            // Create hidden iframe
+            var iframe = document.createElement('iframe');
+            iframe.name = 'hidden-form-iframe';
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            
+            // Create hidden form
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'https://script.google.com/macros/s/AKfycbwzai741zPlnWLROVPwewIQR0LysAwv6RfvdxOy1cOSlpRMOKJ9bCsEPVcMzz1Zzopm/exec';
+            form.target = 'hidden-form-iframe';
+            
+            // Get form data
+            var licence = document.querySelector('[name="licence"]:checked')?.value || '';
+            var subject = document.querySelector('[name="subject"]')?.value || '';
+            var result = document.querySelector('[name="result"]:checked')?.value || '';
+            var other = document.querySelector('[name="other"]')?.value || '';
+            
+            // Build questions text
+            var questionsText = '';
+            for (var i = 1; i <= questionCount; i++) {
+                var topic = document.querySelector('[name="q' + i + '-topic"]')?.value || '';
+                var phrasing = document.querySelector('[name="q' + i + '-phrasing"]')?.value || '';
+                var correct = document.querySelector('[name="q' + i + '-correct"]:checked')?.value || '';
+                
+                if (topic || phrasing) {
+                    questionsText += 'Q' + i + ': ' + topic + '\n';
+                    questionsText += 'Wording: ' + phrasing + '\n';
+                    questionsText += 'Correct: ' + correct + '\n\n';
+                }
+            }
+            
+            // Add fields
+            var fields = {
+                licence: licence,
+                subject: subject,
+                result: result,
+                questions: questionsText,
+                other: other
+            };
+            
+            for (var key in fields) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = fields[key];
+                form.appendChild(input);
+            }
+            
+            document.body.appendChild(form);
+            form.submit();
+            
+            // Show success
+            goToSuccess();
+            
+            // Cleanup after delay
+            setTimeout(function() {
+                document.body.removeChild(form);
+                document.body.removeChild(iframe);
+            }, 1000);
         }
         
         // Subject options by licence (from AC 61 + Stoneybrook courses)
