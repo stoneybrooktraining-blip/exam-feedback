@@ -536,32 +536,27 @@
                 other: formData.get('other') || ''
             };
             
-            // Show loading state
-            const submitBtn = document.querySelector('.btn-next');
-            submitBtn.textContent = 'Submitting...';
-            submitBtn.disabled = true;
-            
             try {
-                // Use no-cors mode to avoid CORS issues
-                await fetch('https://script.google.com/macros/s/AKfycbzQJSyC44yl6aytiyM1U9mbV9dP6psL7mB-zosz7A2EEeUmgRlbSa5fF4kEy2RelIiQ/exec', {
+                const response = await fetch('https://script.google.com/macros/s/AKfycbwQnxFCMLrcNwDhFEQIX-pZ3MG7A8pAZD5r2lrfELV17D7eV9qPqxDfl_8WOl1U404/exec', {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(payload)
                 });
                 
-                // Show success (we can't check response with no-cors, but assume it worked)
-                document.getElementById('step-3').classList.add('hidden');
-                document.querySelector('.progress-bar').classList.add('hidden');
-                document.getElementById('success').classList.remove('hidden');
+                const result = await response.json();
                 
+                if (result.status === 'ok') {
+                    document.getElementById('step-3').classList.add('hidden');
+                    document.querySelector('.progress-bar').classList.add('hidden');
+                    document.getElementById('success').classList.remove('hidden');
+                } else {
+                    alert('Something went wrong. Please try again.');
+                }
             } catch (err) {
                 console.error('Submit error:', err);
                 alert('Could not submit. Please check your connection and try again.');
-                submitBtn.textContent = 'Submit Feedback';
-                submitBtn.disabled = false;
             }
         }
         
