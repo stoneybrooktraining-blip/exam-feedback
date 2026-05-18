@@ -340,6 +340,12 @@
                         <option value="">Select licence first...</option>
                     </select>
                 </div>
+
+                <div class="field">
+                    <label>Exam date</label>
+                    <input type="date" name="exam-date">
+                    <p class="hint">Optional, but useful if ASPEQ wording changes over time.</p>
+                </div>
                 
                 <div class="field">
                     <label>Result <span class="req">*</span></label>
@@ -348,9 +354,15 @@
                         <label><input type="radio" name="result" value="Fail"> <span>Fail</span></label>
                     </div>
                 </div>
+
+                <div class="field">
+                    <label>KDR code or weak area shown</label>
+                    <input type="text" name="kdr-codes" placeholder="e.g., 20.10.4, 52.26.8, or 'cloud formation'">
+                    <p class="hint">Optional. Add anything shown on the result report that helps us map the feedback.</p>
+                </div>
             </div>
             
-            <button class="btn" onclick="goToStep(2)">Continue →</button>
+            <button type="button" class="btn" onclick="goToStep(2)">Continue →</button>
         </div>
         
         <!-- Step 2: Question Feedback -->
@@ -423,6 +435,7 @@
     <script>
         let currentStep = 1;
         let questionCount = 0;
+        let nextQuestionId = 0;
         const MAX_QUESTIONS = 50;
         
         function goToStep(step) {
@@ -443,51 +456,77 @@
         
         function validateStep(step) {
             const currentStepEl = document.getElementById(`step-${step}`);
-            const required = currentStepEl.querySelectorAll('[required]');
+            const invalidField = currentStepEl.querySelector(':invalid');
             
-            for (let field of required) {
-                if (!field.value) {
-                    field.focus();
-                    return false;
-                }
+            if (invalidField) {
+                invalidField.reportValidity();
+                invalidField.focus();
+                return false;
             }
             return true;
         }
         
         function addQuestion() {
-            if (questionCount >= MAX_QUESTIONS) {
+            const activeQuestionCount = document.querySelectorAll('.question-block').length;
+            if (activeQuestionCount >= MAX_QUESTIONS) {
                 alert('Maximum 50 questions allowed');
                 return;
             }
             
-            questionCount++;
+            nextQuestionId++;
+            questionCount = activeQuestionCount + 1;
             const container = document.getElementById('questions-container');
             
             const questionBlock = document.createElement('div');
             questionBlock.className = 'question-block';
-            questionBlock.id = `question-${questionCount}`;
+            questionBlock.id = `question-${nextQuestionId}`;
             
             questionBlock.innerHTML = `
                 <div class="question-header">
                     <span class="question-number">Question ${questionCount}</span>
-                    ${questionCount > 1 ? `<button type="button" class="remove-btn" onclick="removeQuestion(${questionCount})">Remove</button>` : ''}
+                    ${questionCount > 1 ? `<button type="button" class="remove-btn" onclick="removeQuestion(${nextQuestionId})">Remove</button>` : ''}
                 </div>
                 <div class="field">
                     <label>What topic area was this question about? <span class="req">*</span></label>
-                    <input type="text" name="q${questionCount}-topic" placeholder="e.g., Weather patterns, Navigation calculations, Circuit procedures" required>
+                    <input type="text" class="question-topic" placeholder="e.g., Weather patterns, Navigation calculations, Circuit procedures" required>
+                </div>
+                <div class="field">
+                    <label>What type of issue was it? <span class="req">*</span></label>
+                    <select class="question-issue" required>
+                        <option value="">Select issue type...</option>
+                        <option value="Not covered in the course">Not covered in the course</option>
+                        <option value="Covered but not clearly enough">Covered but not clearly enough</option>
+                        <option value="Different wording or terminology">Different wording or terminology</option>
+                        <option value="Calculation or method was unclear">Calculation or method was unclear</option>
+                        <option value="Answer/content disagreement">Answer/content disagreement</option>
+                        <option value="I just want this reviewed">I just want this reviewed</option>
+                    </select>
                 </div>
                 <div class="field">
                     <label>How was this topic presented in the exam? <span class="req">*</span></label>
                     <p class="hint">Describe the wording, terminology, or phrasing used. This helps us understand how ASPEQ structures questions.</p>
-                    <textarea name="q${questionCount}-phrasing" placeholder="e.g., They used 'replenish' instead of 'fill up', asked about 'serviceability requirements' rather than 'maintenance checks', used formal terminology like 'atmospheric lapse rate' instead of simpler language..." style="min-height: 100px;" required></textarea>
+                    <textarea class="question-phrasing" placeholder="e.g., They used 'replenish' instead of 'fill up', asked about 'serviceability requirements' rather than 'maintenance checks', used formal terminology like 'atmospheric lapse rate' instead of simpler language..." style="min-height: 100px;" required></textarea>
                 </div>
                 <div class="field">
                     <label>Did you get it right?</label>
                     <div class="radio-group">
-                        <label><input type="radio" name="q${questionCount}-correct" value="Yes"> <span>Yes</span></label>
-                        <label><input type="radio" name="q${questionCount}-correct" value="No"> <span>No</span></label>
-                        <label><input type="radio" name="q${questionCount}-correct" value="Not sure"> <span>Not sure</span></label>
+                        <label><input type="radio" name="q${nextQuestionId}-correct" value="Yes"> <span>Yes</span></label>
+                        <label><input type="radio" name="q${nextQuestionId}-correct" value="No"> <span>No</span></label>
+                        <label><input type="radio" name="q${nextQuestionId}-correct" value="Not sure"> <span>Not sure</span></label>
                     </div>
+                </div>
+                <div class="field">
+                    <label>How confident are you about this memory?</label>
+                    <select class="question-confidence">
+                        <option value="">Select confidence...</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>What would have helped?</label>
+                    <textarea class="question-helped" placeholder="e.g., More practice with this calculation, a clearer diagram, more NZ-specific wording, or a short lesson on this exact topic." style="min-height: 80px;"></textarea>
                 </div>
             `;
             
@@ -501,9 +540,9 @@
             
             // Renumber remaining questions
             const blocks = document.querySelectorAll('.question-block');
+            questionCount = blocks.length;
             blocks.forEach((block, index) => {
                 const num = index + 1;
-                block.id = `question-${num}`;
                 block.querySelector('.question-number').textContent = `Question ${num}`;
             });
         }
@@ -518,22 +557,36 @@
             // Get form data
             const licence = document.querySelector('[name="licence"]:checked')?.value || '';
             const subject = document.querySelector('[name="subject"]')?.value || '';
+            const examDate = document.querySelector('[name="exam-date"]')?.value || '';
             const result = document.querySelector('[name="result"]:checked')?.value || '';
+            const kdrCodes = document.querySelector('[name="kdr-codes"]')?.value || '';
             const other = document.querySelector('[name="other"]')?.value || '';
             
             // Build questions array
             const questions = [];
-            for (let i = 1; i <= questionCount; i++) {
-                const topic = document.querySelector(`[name="q${i}-topic"]`)?.value || '';
-                const phrasing = document.querySelector(`[name="q${i}-phrasing"]`)?.value || '';
-                const correct = document.querySelector(`[name="q${i}-correct"]:checked`)?.value || '';
+            const questionBlocks = document.querySelectorAll('.question-block');
+            questionBlocks.forEach((block, index) => {
+                const topic = block.querySelector('.question-topic')?.value || '';
+                const issueType = block.querySelector('.question-issue')?.value || '';
+                const phrasing = block.querySelector('.question-phrasing')?.value || '';
+                const correct = block.querySelector('input[type="radio"]:checked')?.value || '';
+                const confidence = block.querySelector('.question-confidence')?.value || '';
+                const helped = block.querySelector('.question-helped')?.value || '';
                 
-                if (topic || phrasing) {
-                    questions.push({ topic, phrasing, correct });
+                if (topic || issueType || phrasing || helped) {
+                    questions.push({
+                        number: index + 1,
+                        topic,
+                        issueType,
+                        phrasing,
+                        correct,
+                        confidence,
+                        helped
+                    });
                 }
-            }
+            });
             
-            const payload = { licence, subject, result, questions, other };
+            const payload = { licence, subject, examDate, result, kdrCodes, questions, other };
             
             try {
                 // Send with no-cors mode - we can't read response but it should work
@@ -576,15 +629,16 @@
             ],
             'ATPL': [
                 { value: 'ATPL Subject 36 Air Law', label: 'Subject 36 - Air Law' },
+                { value: 'ATPL Subject 37 Air Law (Helicopter)', label: 'Subject 37 - Air Law (Helicopter)' },
                 { value: 'ATPL Subject 38 Flight Navigation General', label: 'Subject 38 - Flight Navigation General' },
                 { value: 'ATPL Subject 40 Flight Planning (Aeroplane)', label: 'Subject 40 - Flight Planning (Aeroplane)' },
-                { value: 'ATPL Subject 40 Flight Planning (Helicopter)', label: 'Subject 40 - Flight Planning (Helicopter)' },
+                { value: 'ATPL Subject 41 Flight Planning (Helicopter)', label: 'Subject 41 - Flight Planning (Helicopter)' },
                 { value: 'ATPL Subject 42 Meteorology', label: 'Subject 42 - Meteorology' },
                 { value: 'ATPL Subject 44 Instruments and Navigation Aids', label: 'Subject 44 - Instruments and Navigation Aids' },
+                { value: 'ATPL Subject 46 Human Factors', label: 'Subject 46 - Human Factors' },
                 { value: 'ATPL Subject 48 Advanced Aerodynamics, Performance and Systems (Aeroplane)', label: 'Subject 48 - Advanced Aerodynamics, Performance and Systems (Aeroplane)' },
                 { value: 'ATPL Subject 50 Aerodynamics and Aircraft Systems (Helicopter)', label: 'Subject 50 - Aerodynamics and Aircraft Systems (Helicopter)' },
-                { value: 'ATPL Subject 50 Performance and Loading (Helicopter)', label: 'Subject 50 - Performance and Loading (Helicopter)' },
-                { value: 'ATPL Subject 46 Human Factors', label: 'Subject 46 - Human Factors' }
+                { value: 'ATPL Subject 51 Performance and Loading (Helicopter)', label: 'Subject 51 - Performance and Loading (Helicopter)' }
             ],
             'BGT': [
                 { value: 'BGT Basic Gas Turbine (Aeroplane)', label: 'Basic Gas Turbine (Aeroplane)' },
