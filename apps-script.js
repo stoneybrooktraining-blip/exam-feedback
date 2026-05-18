@@ -128,7 +128,7 @@ function doPost(e) {
   }
 }
 
-function setupAll() {
+function setupFeedbackBackend() {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   ensureSheet_(ss, SUBMISSIONS_SHEET, SUBMISSIONS_HEADERS);
   ensureSheet_(ss, QUESTIONS_SHEET, QUESTIONS_HEADERS);

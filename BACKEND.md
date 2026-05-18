@@ -10,7 +10,7 @@ The backend script source is kept in `apps-script.js` so the receiver is version
 
 1. Open the Apps Script project behind the current deployment URL.
 2. Replace the server code with `apps-script.js`.
-3. Run `setupAll()` once from Apps Script to confirm the `Submissions` and `Questions` headers.
+3. Run `setupFeedbackBackend()` once from Apps Script to confirm the `Submissions` and `Questions` headers.
 4. Deploy a new web-app version with access that allows anonymous student submissions.
 5. Keep the existing deployment URL in `index.html`, or update the URL if Google creates a new deployment.
 6. Submit a labelled test response, then confirm:
