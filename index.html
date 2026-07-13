@@ -417,8 +417,11 @@
         <!-- Success -->
         <div id="success" class="card hidden">
             <div class="success">
-                <h2>Thank you!</h2>
-                <p>Your feedback helps us improve our courses for future students.</p>
+                <h2>Thank you! 🎉</h2>
+                <p>Your feedback's been submitted — thanks for helping us sharpen the courses for the students coming after you.</p>
+                <p style="margin-top: 14px;">Got feedback on another question or exam? Please send as many as you like — there's no limit, and every one helps.</p>
+                <p class="hint" style="margin-top: 14px;">It's completely anonymous — we don't collect your name, email, or any personal details. Submit as often as you like.</p>
+                <p style="margin-top: 20px;"><button type="button" class="btn" onclick="location.reload()">Submit more feedback</button></p>
                 <p style="margin-top: 20px;">
                     <a href="https://stoneybrooktraining-blip.github.io/kdr-refresher/">← Back to KDR Refresher</a>
                 </p>
@@ -497,15 +500,21 @@
                         <option value="Not covered in the course">Not covered in the course</option>
                         <option value="Covered but not clearly enough">Covered but not clearly enough</option>
                         <option value="Different wording or terminology">Different wording or terminology</option>
+                        <option value="Answer options too similar or ambiguous">Answer options too similar or ambiguous (felt like a word trick)</option>
                         <option value="Calculation or method was unclear">Calculation or method was unclear</option>
                         <option value="Answer/content disagreement">Answer/content disagreement</option>
                         <option value="I just want this reviewed">I just want this reviewed</option>
                     </select>
                 </div>
                 <div class="field">
-                    <label>How was this topic presented in the exam? <span class="req">*</span></label>
-                    <p class="hint">Describe the wording, terminology, or phrasing used. This helps us understand how ASPEQ structures questions.</p>
+                    <label>What was the question actually asking, and how was it worded? <span class="req">*</span></label>
+                    <p class="hint">In your own words: what was the question testing, and what wording did it use? Being specific helps us match the exact ASPEQ question.</p>
                     <textarea class="question-phrasing" placeholder="e.g., They used 'replenish' instead of 'fill up', asked about 'serviceability requirements' rather than 'maintenance checks', used formal terminology like 'atmospheric lapse rate' instead of simpler language..." style="min-height: 100px;" required></textarea>
+                </div>
+                <div class="field">
+                    <label>What were the answer options — and which did you pick vs the correct one?</label>
+                    <p class="hint">If two options seemed almost identical, give us both — this is what lets us pin down the exact question.</p>
+                    <textarea class="question-options" placeholder="e.g., Two options were 'stable' and 'ELR less than the DALR'. I chose the first; the marked answer was the second — they mean the same thing to me." style="min-height: 80px;"></textarea>
                 </div>
                 <div class="field">
                     <label>Did you get it right?</label>
@@ -553,7 +562,12 @@
             document.getElementById('success').classList.remove('hidden');
         }
         
+        let __submitting = false;
         async function submitToSheet() {
+            if (__submitting) return;
+            __submitting = true;
+            const __btn = document.querySelector('#step-3 button[type="submit"]') || document.querySelector('button[type="submit"]');
+            if (__btn) { __btn.disabled = true; __btn.textContent = 'Submitting…'; }
             // Get form data
             const licence = document.querySelector('[name="licence"]:checked')?.value || '';
             const subject = document.querySelector('[name="subject"]')?.value || '';
@@ -572,13 +586,15 @@
                 const correct = block.querySelector('input[type="radio"]:checked')?.value || '';
                 const confidence = block.querySelector('.question-confidence')?.value || '';
                 const helped = block.querySelector('.question-helped')?.value || '';
+                const options = block.querySelector('.question-options')?.value || '';
                 
-                if (topic || issueType || phrasing || helped) {
+                if (topic || issueType || phrasing || helped || options) {
                     questions.push({
                         number: index + 1,
                         topic,
                         issueType,
                         phrasing,
+                        answerOptions: options,
                         correct,
                         confidence,
                         helped
@@ -602,6 +618,8 @@
                 
             } catch (err) {
                 console.error('Error:', err);
+                __submitting = false;
+                if (__btn) { __btn.disabled = false; __btn.textContent = 'Submit Feedback'; }
                 alert('Could not submit. Please try again.');
             }
         }
