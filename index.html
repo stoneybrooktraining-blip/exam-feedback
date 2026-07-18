@@ -495,7 +495,7 @@
                 </div>
                 <div class="field">
                     <label>What type of issue was it? <span class="req">*</span></label>
-                    <select class="question-issue" required>
+                    <select class="question-issue" required onchange="toggleOptionsField(this)">
                         <option value="">Select issue type...</option>
                         <option value="Not covered in the course">Not covered in the course</option>
                         <option value="Covered but not clearly enough">Covered but not clearly enough</option>
@@ -511,10 +511,10 @@
                     <p class="hint">In your own words: what was the question testing, and what wording did it use? Being specific helps us match the exact ASPEQ question.</p>
                     <textarea class="question-phrasing" placeholder="e.g., They used 'replenish' instead of 'fill up', asked about 'serviceability requirements' rather than 'maintenance checks', used formal terminology like 'atmospheric lapse rate' instead of simpler language..." style="min-height: 100px;" required></textarea>
                 </div>
-                <div class="field">
-                    <label>What were the answer options — and which did you pick vs the correct one?</label>
-                    <p class="hint">If two options seemed almost identical, give us both — this is what lets us pin down the exact question.</p>
-                    <textarea class="question-options" placeholder="e.g., Two options were 'stable' and 'ELR less than the DALR'. I chose the first; the marked answer was the second — they mean the same thing to me." style="min-height: 80px;"></textarea>
+                <div class="field question-options-field" style="display:none;">
+                    <label>What made the options hard to tell apart?</label>
+                    <p class="hint">In your own words — no need to quote the exam. Just the two ideas you were choosing between.</p>
+                    <textarea class="question-options" placeholder="e.g., It came down to 'stable air' vs 'ELR less than the DALR' — to me those mean the same thing, but the second was marked right." style="min-height: 80px;"></textarea>
                 </div>
                 <div class="field">
                     <label>Did you get it right?</label>
@@ -540,6 +540,13 @@
             `;
             
             container.appendChild(questionBlock);
+        }
+        
+        function toggleOptionsField(sel) {
+            const block = sel.closest('.question-block');
+            if (!block) return;
+            const wrap = block.querySelector('.question-options-field');
+            if (wrap) wrap.style.display = (sel.value === 'Answer options too similar or ambiguous') ? '' : 'none';
         }
         
         function removeQuestion(id) {
